@@ -1,2 +1,2 @@
 # terrap-cli
-Terrap is a cli utility used to notify about Terraform deprecations in your code! 
+Terrap is a CLI utility used to notify about Terraform deprecations in your code! 

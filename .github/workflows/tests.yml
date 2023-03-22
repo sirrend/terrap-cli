@@ -1,0 +1,78 @@
+name: Terrap-Tests
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "*.go"
+      - "*/*.go"
+      - "*/*/*.go"
+
+defaults:
+  run:
+    working-directory: ./terraform
+
+env:
+  PACKAGE_NAME: sirrend-terraform.com/terrap
+
+jobs:
+  go-setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Clean package environment
+        run: go mod tidy
+
+  test:
+    needs: go-setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: look for changed packages
+        run: git diff --name-only origin/main HEAD | grep internal > changed_packages || true #git show --name-only --oneline | tail -n +2
+
+      - name: Iterate over uniq files only
+        run: |
+          touch ./temp
+          while read line; do
+            dirname $line | sed 's/^.*internal/internal/' >> ./temp
+          done < changed_packages
+
+          cat ./temp | uniq > changed_packages
+
+      - name: Print changed packages
+        run: cat changed_packages
+
+#      - name: run tests
+#        run: |
+#          while read INTERNAL_PACKAGE; do
+#            echo "Running tests for package ${INTERNAL_PACKAGE}.."
+#
+#            if [[ -f $INTERNAL_PACKAGE/$(basename $INTERNAL_PACKAGE)_test.go ]]; then
+#              if [[ $(go test -v $(echo $PACKAGE_NAME/$INTERNAL_PACKAGE) | grep FAIL | wc -l | awk '{print $1}') > 0 ]]
+#              then
+#                echo "Tests failed for package ${INTERNAL_PACKAGE}."
+#                echo
+#                exit 1
+#              else
+#                echo "Tests for package ${INTERNAL_PACKAGE} passed successfully!"
+#                echo
+#              fi
+#            else
+#              echo "No test file exists for package ${INTERNAL_PACKAGE}."
+#              echo
+#            fi
+#          done < changed_packages
+      - name: Run all tests
+        run: go test ./...
