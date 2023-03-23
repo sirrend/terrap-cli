@@ -10,7 +10,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./terraform
+    working-directory: ./
 
 env:
   IS_CHANGED: false
@@ -31,12 +31,12 @@ jobs:
       run: go mod tidy
       
     - name: Build for tests
-      run: go build -v -ldflags="-X 'sirrend-terraform.com/terrap/internal/version.Version=${GITHUB_SHA::6}'"
+      run: go build -v -ldflags="-X 'github.com/sirrend/terrap-cli/internal/version.Version=${GITHUB_SHA::6}'"
       
     - uses: actions/upload-artifact@master
       with:
         name: terrap
-        path: ./terraform
+        path: ./
 
   tests:
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: terrap
-        path: ./terraform
+        path: ./
 
     - name: Change permissions 
       run: chmod u+x terrap
@@ -66,7 +66,7 @@ jobs:
     - uses: actions/download-artifact@master
       with:
         name: terrap
-        path: ./terraform
+        path: ./
 
     - name: Change permissions 
       run: chmod u+x terrap
@@ -79,11 +79,11 @@ jobs:
       uses: FragileTech/bump-version@main
       with:
         current_version: "${{ env.current_version }}"
-        files: ./terraform/version.md
+        files: ./version.md
         commit_name: sirrend-terrap
         commit_email: business@sirrend.com
         login: ${{ secrets.ACTION_USERNAME }}
-        token: "${{ github.token }}"
+        token: ${{ github.token }}
 
     - name: Get New Version
       run: echo "new_version=$(grep '# version' version.md | cut -d ' ' -f3)" >> $GITHUB_ENV
@@ -92,7 +92,7 @@ jobs:
     - name: Final build
       env:
         GOTRACEBACK: "none"
-      run: go build -v -ldflags="-X 'sirrend-terraform.com/terrap/internal/version.Version=${{ env.new_version }}'"
+      run: go build -v -ldflags="-X 'github.com/sirrend/terrap-cli/internal/version.Version=${{ env.new_version }}'"
 
     - name: Release
       uses: actions/create-release@v1
@@ -102,7 +102,7 @@ jobs:
         prerelease: false
         release_name: v${{ env.new_version }}
         tag_name: v${{ env.new_version }}
-        body_path: ./terraform/CHANGELOG.md
+        body_path: ./CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
@@ -112,36 +112,6 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./terraform/terrap
+        asset_path: ./terrap
         asset_name: terrap
         asset_content_type: octet-stream
-      
-  docker:
-      runs-on: ubuntu-latest
-      needs: release
-
-      steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@master
-        with:
-          name: terrap
-          path: ./terraform
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Get New Version
-        run: echo "new_version=$(grep '# version' version.md | cut -d ' ' -f3)" >> $GITHUB_ENV
-        id: new_version
-
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          file: terraform/Dockerfile
-          context: ./terraform
-          push: true
-          tags: netanelkoli/sirrend-tf-cli:${{ env.new_version }}

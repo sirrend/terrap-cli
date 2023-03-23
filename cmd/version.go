@@ -9,8 +9,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/sirrend/terrap-cli/internal/terrap_version"
 	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/version"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version description of terrap",
 	Run: func(cmd *cobra.Command, args []string) {
-		t := terrap_version.TerrapVersion{}
+		t := version.TerrapVersion{}
 		t.SetVersion() // set the version details
 
 		if cmd.Flag("json").Changed {

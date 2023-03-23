@@ -1,4 +1,4 @@
-package terrap_version
+package version
 
 import (
 	"testing"

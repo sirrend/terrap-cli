@@ -10,10 +10,10 @@ on:
 
 defaults:
   run:
-    working-directory: ./terraform
+    working-directory: ./
 
 env:
-  PACKAGE_NAME: sirrend-terraform.com/terrap
+  PACKAGE_NAME: github.com/sirrend/terrap
 
 jobs:
   go-setup:
