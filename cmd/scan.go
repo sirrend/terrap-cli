@@ -24,13 +24,8 @@ var scanCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(scanCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// scanCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// scanCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// scan command flags
+	scanCmd.Flags().BoolP("table", "t", false, "Print scan output as a table.")
+	scanCmd.Flags().BoolP("json", "j", false, "Print scan output as json.")
+	scanCmd.Flags().BoolP("annotate", "a", false, "Annotate the code itself.")
 }
