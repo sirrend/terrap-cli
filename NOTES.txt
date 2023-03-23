@@ -1,0 +1,2 @@
+On MacOS, should use the following command to enable larger number 
+of files able to be opened together: `ulimit -n 1024`
