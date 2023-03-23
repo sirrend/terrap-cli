@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/sirrend/terrap-cli/internal/commons"
 	"io"
 	"io/ioutil"
 	"log"
@@ -17,30 +16,6 @@ import (
 	"regexp"
 	"strings"
 )
-
-/*
-@brief: GetProgressBar returns an initialized progress bar
-@
-@params: barText - string - the progress bar initial text
-@
-@return: progress bar
-*/
-
-func GetProgressBar(barText string) *progressbar.ProgressBar {
-	return progressbar.NewOptions(100,
-		progressbar.OptionEnableColorCodes(true),
-		progressbar.OptionShowBytes(false),
-		progressbar.OptionShowDescriptionAtLineEnd(),
-		progressbar.OptionSetElapsedTime(false),
-		progressbar.OptionSetDescription("[cyan]"+barText+"[reset]"),
-		progressbar.OptionSetTheme(progressbar.Theme{
-			Saucer:        "[green]=[reset]",
-			SaucerHead:    "[green]>[reset]",
-			SaucerPadding: " ",
-			BarStart:      "[",
-			BarEnd:        "]",
-		}))
-}
 
 /*
 @brief: GetVersionFromString grep version with semantic format from text
@@ -377,17 +352,4 @@ func GenerateString(n int) string {
 	}
 
 	return string(b)
-}
-
-/*
-@brief: ProgressBarPanic prettify the progress bar panic operation
-@
-@params: pb - pointer to progressbar.ProgressBar type
-@ 		 errMsg - error - the error message to output
-*/
-
-func ProgressBarPanic(pb *progressbar.ProgressBar, text string, errMsg error) {
-	pb.Describe(text + "\n\n")
-	fmt.Println(commons.RED_COLOR + "| " + strings.ReplaceAll(errMsg.Error(), "\n", "\n| ") + commons.RESET_COLOR)
-	os.Exit(1)
 }

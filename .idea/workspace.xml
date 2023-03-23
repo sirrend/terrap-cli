@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="000efb24-97c5-4cc8-906f-1b9373634141" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/commons/commons.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handle_user_files/attribute.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handle_user_files/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handle_user_files/resource.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/handle_user_files/utils.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/utils/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/version.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/terraform-test/init.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/terraform-test/module/test.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/terraform-test/module/test/test.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/terraform-test/test.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/scan.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/scan.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/utils/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/utils/utils.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,15 +47,19 @@
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
     "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
     "WebServerToolWindowFactoryState": "false",
+    "configurable..is.expanded": "false",
+    "configurable.GoLibrariesConfigurable.is.expanded": "true",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/yuvalpress/Desktop/Sirrend/terrap-cli/internal"
+    "last_opened_file_path": "/Users/yuvalpress/Desktop/Sirrend/terrap-cli/cmd",
+    "settings.editor.selected.configurable": "go.vgo"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/internal" />
+      <recent name="$PROJECT_DIR$/cmd" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/internal" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -74,7 +78,6 @@
     </option>
   </component>
   <component name="VgoProject">
-    <integration-enabled>false</integration-enabled>
     <settings-migrated>true</settings-migrated>
   </component>
 </project>

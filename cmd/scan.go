@@ -5,7 +5,8 @@ Copyright © 2023 Sirrend
 package cmd
 
 import (
-	"fmt"
+	"github.com/sirrend/terrap-cli/internal/handle_user_files"
+	"github.com/sirrend/terrap-cli/internal/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,8 @@ var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan your IaC code to find provider changes",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("scan called")
+		resources, _ := handle_user_files.ScanFolderRecursively("./terraform-test")
+		utils.PrettyPrintStruct(resources)
 	},
 }
 
