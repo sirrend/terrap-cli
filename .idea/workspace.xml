@@ -5,14 +5,44 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="000efb24-97c5-4cc8-906f-1b9373634141" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/init.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/config/config_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/providers/providers.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/providers/providers_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/rules_interaction/ruleset.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/state/state.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/state/state_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/terraform_utils/terraform_utils.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/versions/versions.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/workspace/workspace.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/terrap-cli.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/terrap-cli.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/root.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/root.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/scan.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/scan.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/version.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/version.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_user_files/attribute.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/attribute.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_user_files/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_user_files/resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_user_files/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/utils.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/rules_interaction/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_interaction/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/init.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/init.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/test.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
   </component>
   <component name="GOROOT" url="file:///usr/local/go" />
   <component name="Git.Settings">
@@ -34,6 +64,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
@@ -46,16 +77,16 @@
     "configurable.GoLibrariesConfigurable.is.expanded": "true",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/yuvalpress/Desktop/Sirrend/terrap-cli",
+    "last_opened_file_path": "/Users/yuvalpress/Desktop/Sirrend/terrap-cli/internal",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "go.vgo"
+    "settings.editor.selected.configurable": "com.goide.configuration.GoProjectSettingsConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/cmd" />
       <recent name="$PROJECT_DIR$/internal" />
+      <recent name="$PROJECT_DIR$/cmd" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

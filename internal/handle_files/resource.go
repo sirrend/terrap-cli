@@ -1,8 +1,10 @@
-package handle_user_files
+package handle_files
 
 import (
+	"github.com/Jeffail/gabs"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
+	"github.com/sirrend/terrap-cli/internal/rules_interaction"
 )
 
 // Resource holds all the data scraped from user files for a specific resource
@@ -93,4 +95,32 @@ func (r Resource) IsResource() bool {
 	}
 
 	return false
+}
+
+// GetRuleset
+/*
+@brief:
+	GetRuleset checks if the resource in context is inside the given rulebook and returns it if it does.
+	If no RuleSet is found, will return an empty object and nor error.
+@params:
+	rulebook rules_interaction.Rulebook - the rulebook to search for the ruleset in
+@returns:
+	*gabs.Container - the ruleset to execute
+	error - if exists
+*/
+func (r Resource) GetRuleset(rulebook rules_interaction.Rulebook) (rulesetObj rules_interaction.RuleSet, err error) {
+	parsedRulebook, err := gabs.ParseJSON(rulebook.Bytes)
+
+	if err == nil {
+		resourcesMap := parsedRulebook.Path("RuleSets")
+
+		if resourcesMap != nil {
+			ruleset := resourcesMap.Path(r.Name)
+
+			rulesetObj = rules_interaction.RuleSet{ResourceName: r.Name, Rules: ruleset}
+			return rulesetObj, nil
+		}
+	}
+
+	return rulesetObj, err
 }

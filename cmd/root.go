@@ -17,10 +17,13 @@ limitations under the License.
 package cmd
 
 import (
+	"github.com/sirrend/terrap-cli/internal/workspace"
 	"os"
 
 	"github.com/spf13/cobra"
 )
+
+var mainWorkspace = workspace.Workspace{}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

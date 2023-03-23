@@ -8,17 +8,14 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-exec/tfexec"
-	"github.com/zclconf/go-cty/cty"
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/terraform_utils"
+	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/workspace"
 	"io"
 	"log"
 	"os"
 	"path"
-	"sirrend-terraform.com/terrap/internal/commons"
-	terraform_utils "sirrend-terraform.com/terrap/internal/terraform-utils"
-	"sirrend-terraform.com/terrap/internal/types"
-	"sirrend-terraform.com/terrap/internal/utils"
-	"sirrend-terraform.com/terrap/internal/workspace"
-	"strings"
 )
 
 /*
@@ -40,51 +37,6 @@ func CreateProviderBlockTemplate() (*hclwrite.Body, *hclwrite.File) {
 	reqProvsBlockBody := reqProvsBlock.Body()
 
 	return reqProvsBlockBody, hclFile
-}
-
-/*
-@brief: CreateTempProviderFile creates a temporary terraform providers file to download the newest version by
-@
-@params: u []types.UpgradeList - a list of all the packages to upgrade
-@
-@returns: *gabs.Container - the schema in gabs format
-@		  error - if exist
-*/
-
-func CreateTempProviderFile(u []types.UpgradeList) (string, error) {
-	// create new file on system
-	folderName := ".temp/temp" + utils.GenerateString(3)
-	err := utils.CreateDirIfNotExist(folderName, 0747)
-	if err != nil {
-		return "", err
-	}
-
-	tfFile, err := os.Create(folderName + "/init.tf")
-	if err != nil {
-		return "", err
-	}
-
-	body, hclFile := CreateProviderBlockTemplate()
-	for _, values := range u {
-		s := strings.Split(values.Source, "/")
-		body.SetAttributeValue(s[len(s)-1],
-			cty.ObjectVal(map[string]cty.Value{
-				"source":  cty.StringVal(values.Source),
-				"version": cty.StringVal(values.Version),
-			}))
-	}
-
-	_, err = tfFile.Write(hclFile.Bytes())
-	if err != nil {
-		return "", err
-	}
-
-	err = tfFile.Close()
-	if err != nil {
-		return "", err
-	}
-
-	return folderName, nil
 }
 
 /*

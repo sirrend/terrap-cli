@@ -3,7 +3,6 @@ package versions
 import (
 	"github.com/Masterminds/semver/v3"
 	validate "golang.org/x/mod/semver"
-	"sort"
 )
 
 type SemverVersion struct {
@@ -68,23 +67,4 @@ func (v *SemverVersion) IsNewerThen(new string) bool {
 	}
 
 	return false
-}
-
-/*
-@brief: SortVersionsList sort a list of versions
-@
-@params: versions - []string - a list of version represented as strings
-@
-@return: a list of sorted versions
-*/
-
-func SortVersionsList(versions []string) []*semver.Version {
-	sorted := make([]*semver.Version, len(versions))
-	for i, raw := range versions {
-		v := semver.MustParse(raw)
-		sorted[i] = v
-	}
-
-	sort.Sort(semver.Collection(sorted))
-	return sorted
 }

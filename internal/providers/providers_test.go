@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/Jeffail/gabs"
-	terraform_utils "sirrend-terraform.com/terrap/internal/terraform-utils"
+	"github.com/sirrend/terrap-cli/internal/terraform_utils"
 )
 
 // Test if saving schema is working

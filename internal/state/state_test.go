@@ -1,8 +1,8 @@
 package state
 
 import (
+	"github.com/sirrend/terrap-cli/internal/workspace"
 	"os"
-	"sirrend-terraform.com/terrap/internal/workspace"
 	"testing"
 
 	"github.com/hashicorp/go-version"

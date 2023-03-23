@@ -1,4 +1,4 @@
-package handle_user_files
+package handle_files
 
 import (
 	"errors"

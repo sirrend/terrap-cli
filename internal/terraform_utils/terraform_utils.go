@@ -20,38 +20,6 @@ type terraformVersion struct {
 }
 
 /*
-@brief: GetTempExecuter is used to retrieve a temporary terraform executer
-@
-@returns: string - the executer
-@		  error - if exists
-*/
-
-func GetTempExecuter() (string, error) {
-	if IsTerraformInstalled() {
-		execPath, err := exec.LookPath("terraform")
-		if err != nil {
-			return "", err
-		}
-
-		return execPath, nil
-
-	} else {
-		installer := &releases.ExactVersion{
-			Product: product.Terraform,
-			Version: version.Must(version.NewVersion(ver.Version)),
-		}
-
-		// install terraform in context of the given directory
-		execPath, err := installer.Install(context.Background())
-		if err != nil {
-			return "", err
-		}
-
-		return execPath, nil
-	}
-}
-
-/*
 @brief: IsTerraformInstalled checks if terraform is installed
 @
 @returns: true if terraform is installed, false otherwise

@@ -2,13 +2,12 @@ package config
 
 import (
 	"github.com/fatih/color"
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/state"
+	"github.com/sirrend/terrap-cli/internal/utils"
 	"log"
 	"os"
 	"path"
-	"sirrend-terraform.com/terrap/internal/commons"
-
-	"sirrend-terraform.com/terrap/internal/state"
-	"sirrend-terraform.com/terrap/internal/utils"
 )
 
 // struct to hold all the cli tool configuration parameters
