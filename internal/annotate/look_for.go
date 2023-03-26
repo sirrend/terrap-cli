@@ -2,7 +2,6 @@ package annotate
 
 import (
 	"bufio"
-	"fmt"
 	"github.com/sirrend/terrap-cli/internal/handle_files"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"os"
@@ -10,7 +9,6 @@ import (
 )
 
 func FindAttributeInResourceDeclaration(resource handle_files.Resource, attribute string) int {
-	fmt.Println(resource.Name, attribute)
 	var lines []string
 
 	// Open the file for reading

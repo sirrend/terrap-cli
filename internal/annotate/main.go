@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func AddLineInPosition(resource handle_files.Resource, newLine string) {
+func AddLineInPosition(resource handle_files.Resource, newLine string, pos int) {
 	var lines []string
 
 	// Open the file for reading
@@ -27,8 +27,7 @@ func AddLineInPosition(resource handle_files.Resource, newLine string) {
 		lines = append(lines, scanner.Text())
 	}
 
-	// Insert the new line at position 3 (0-indexed)
-	pos := resource.Pos.Line - 1 // annotation position
+	// Insert the new line at the given position
 	lines = append(lines[:pos], append([]string{newLine}, lines[pos:]...)...)
 
 	// Truncate the file to 0 bytes
@@ -54,7 +53,10 @@ func AddLineInPosition(resource handle_files.Resource, newLine string) {
 
 func AddAnnotationByRuleSet(resource handle_files.Resource, ruleSet rules_interaction.RuleSet) {
 	for _, rule := range ruleSet.Rules {
-		fmt.Println(FindAttributeInResourceDeclaration(resource, rule.ComponentName))
-		//AddLineInPosition(resource, rule.Notification)
+		pos := FindAttributeInResourceDeclaration(resource, rule.ComponentName)
+
+		if pos != 0 {
+			AddLineInPosition(resource, "\n# "+rule.Notification, pos)
+		}
 	}
 }

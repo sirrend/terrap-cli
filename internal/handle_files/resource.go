@@ -5,6 +5,9 @@ import (
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 	"github.com/sirrend/terrap-cli/internal/rules_interaction"
+	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/spf13/cast"
+	"strings"
 )
 
 // Resource holds all the data scraped from user files for a specific resource
@@ -109,6 +112,7 @@ func (r Resource) IsResource() bool {
 	error - if exists
 */
 func (r Resource) GetRuleset(rulebook rules_interaction.Rulebook) (rulesetObj rules_interaction.RuleSet, err error) {
+	var rules []rules_interaction.Rule
 	parsedRulebook, err := gabs.ParseJSON(rulebook.Bytes)
 
 	if err == nil {
@@ -117,7 +121,38 @@ func (r Resource) GetRuleset(rulebook rules_interaction.Rulebook) (rulesetObj ru
 		if resourcesMap != nil {
 			ruleset := resourcesMap.Path(r.Name)
 
-			rulesetObj = rules_interaction.RuleSet{ResourceName: r.Name, Rules: ruleset}
+			if ruleset.Path("Rules") != nil {
+				if rulesSlice, err := ruleset.Path("Rules").Children(); err == nil {
+					for _, rule := range rulesSlice {
+						var componentName string
+
+						// get rule key name
+						if strings.Contains(rule.Path("ResourceComponent").String(), "parameter") {
+							name := utils.MustUnquote(rule.Path("HumanReadablePath").String())
+							splintedName := strings.Split(name, ".")
+							componentName = splintedName[len(splintedName)-2]
+						} else if utils.MustUnquote(rule.Path("ChangeOP").String()) == "removed" {
+							componentName = utils.MustUnquote(rule.Path("OldKey").String())
+						} else {
+							componentName = utils.MustUnquote(rule.Path("NewKey").String())
+						}
+
+						rules = append(rules, rules_interaction.Rule{
+							Path:          utils.MustUnquote(rule.Path("HumanReadablePath").String()),
+							ComponentName: componentName,
+							ComponentType: utils.MustUnquote(rule.Path("ResourceComponent").String()),
+							Required:      cast.ToBool(rule.Path("Required").String()),
+							Notification:  utils.MustUnquote(rule.Path("Notify").String()),
+						})
+					}
+				}
+			}
+
+			rulesetObj = rules_interaction.RuleSet{
+				ResourceName: r.Name,
+				Rules:        rules,
+			}
+
 			return rulesetObj, nil
 		}
 	}

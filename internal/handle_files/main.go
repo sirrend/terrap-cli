@@ -50,7 +50,7 @@ func ScanFile(fileName string) (resources []Resource, err error) {
 @params:
 	dir string - the folder to parse
 @returns:
-	resources - []*Resource - map of all resources found in the given file and their attributes
+	resources - []*Resource - map of all resources found in the given folder and its attributes'
 	error - if exists, else nil
 */
 func ScanFolder(dir string) (resources []Resource, err error) {
@@ -85,7 +85,7 @@ func ScanFolder(dir string) (resources []Resource, err error) {
 @params:
 	dir string - the folder to parse
 @returns:
-	resources - []*Resource - map of all resources found in the given file and their attributes
+	resources - []*Resource - map of all resources found in the given folder and its attributes'
 	error - if exists, else nil
 */
 func ScanFolderRecursively(dir string) (resources []Resource, err error) {

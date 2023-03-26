@@ -10,10 +10,10 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"os"
 	"path"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -295,11 +295,13 @@ func PrettyPrintStruct(i interface{}) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println()
 	} else {
 		log.Fatal(err)
 	}
 }
 
+// GetInput
 /*
 @brief: GetInput will gets input from user and returns it
 @
@@ -307,7 +309,6 @@ func PrettyPrintStruct(i interface{}) {
 @
 @returns: string - the input from the user
 */
-
 func GetInput(message string) string {
 	in := bufio.NewReader(os.Stdin)   // input reader
 	green := color.New(color.FgGreen) // cli color
@@ -322,34 +323,48 @@ func GetInput(message string) string {
 	return input
 }
 
+// MustUnquote
 /*
-@brief: RemoveIndex will remove index from slice
+@brief: MustUnquote get string input and returns it unquoted
 @
-@params: s - []string - a slice of strings to remove from
-@		 index - int - the index to remove
+@params: str string - the string to unquote
 @
-@returns: []string - the new slice
+@returns: string - the new string
 */
+func MustUnquote(str string) string {
+	newStr, _ := strconv.Unquote(str)
 
-func RemoveIndex(s []string, index int) []string {
-	return append(s[:index], s[index+1:]...)
+	return newStr
 }
 
+// GetCodeUntilMatchingBrace
 /*
-@brief: GenerateString will generate a random string with the <n> size
-@
-@params: n - int - numb of chars
-@
-@returns: string - the new generated string
+@brief:
+	GetCodeUntilMatchingBrace returns the code until the next matching bracket
+@params:
+	input string - the code as string to work on
+@returns:
+	string - string with matching sets of brackets
 */
+func GetCodeUntilMatchingBrace(input string) string {
+	var output string
 
-func GenerateString(n int) string {
-	letterRunes := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	braceCount := 0
+	for index, char := range input {
+		if char == '{' { // if opening bracket
+			braceCount++
 
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		} else if char == '}' { // if closing bracket
+			braceCount--
+
+			if braceCount == 0 { // if brackets match
+				output += string(input[index])
+
+				return output
+			}
+		}
+		output += string(char)
 	}
 
-	return string(b)
+	return output
 }

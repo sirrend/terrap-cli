@@ -11,6 +11,7 @@ require (
 	github.com/hashicorp/terraform v1.4.2
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20230313152339-7c9946b1df49
 	github.com/hashicorp/terraform-exec v0.18.1
+	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
 )
 

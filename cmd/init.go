@@ -104,11 +104,14 @@ var initCmd = &cobra.Command{
 				d, _ := filepath.Abs(cmd.Flag("directory").Value.String())
 				mainWorkspace.Location = d
 				terraformInit(c)
+
+				fmt.Println("Terrap directory upgraded!")
 			} else {
 				d, _ := filepath.Abs(cmd.Flag("directory").Value.String())
 				deleteInitData(d)
 				mainWorkspace.Location = d
 				terraformInit(d)
+				fmt.Println("Terrap directory upgraded!")
 			}
 
 		} else if cmd.Flag("directory").Changed {
