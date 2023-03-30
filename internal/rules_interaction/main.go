@@ -76,7 +76,7 @@ func FindRulebookFile(provider, sourceVersion string) string {
 @brief:
 	GetRulebook retrieves a rulebook from the remote bucket
 @params:
-	provider - string - the provider name
+	rulebookName - string - the rulebook name
 	sourceVersion - string - the source version
 	targetVersion - string - the target version
 @returns:
