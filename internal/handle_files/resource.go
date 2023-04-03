@@ -1,13 +1,11 @@
 package handle_files
 
 import (
-	"github.com/Jeffail/gabs"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
-	"github.com/sirrend/terrap-cli/internal/rules_interaction"
+	"github.com/sirrend/terrap-cli/internal/rules_api"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/spf13/cast"
-	"strings"
 )
 
 // Resource holds all the data scraped from user files for a specific resource
@@ -104,51 +102,37 @@ func (r Resource) IsResource() bool {
 /*
 @brief:
 	GetRuleset checks if the resource in context is inside the given rulebook and returns it if it does.
-	If no RuleSet is found, will return an empty object and nor error.
+	If no RuleSet is found, will return an empty object and no error.
 @params:
-	rulebook rules_interaction.Rulebook - the rulebook to search for the ruleset in
+	rulebook rules_api.Rulebook - the rulebook to search for the ruleset in
 @returns:
 	*gabs.Container - the ruleset to execute
 	error - if exists
 */
-func (r Resource) GetRuleset(rulebook rules_interaction.Rulebook) (rulesetObj rules_interaction.RuleSet, err error) {
-	var rules []rules_interaction.Rule
-	parsedRulebook, err := gabs.ParseJSON(rulebook.Bytes)
+func (r Resource) GetRuleset(rulebook rules_api.Rulebook) (rulesetObj rules_api.RuleSet, err error) {
+	var rules []rules_api.Rule
 
-	if err == nil {
-		resourcesMap := parsedRulebook.Path("RuleSets")
-
-		if resourcesMap != nil {
-			ruleset := resourcesMap.Path(r.Name)
-
-			if ruleset.Path("Rules") != nil {
-				if rulesSlice, err := ruleset.Path("Rules").Children(); err == nil {
-					for _, rule := range rulesSlice {
-						var componentName string
-
-						// get rule key name
-						if strings.Contains(rule.Path("ResourceComponent").String(), "parameter") {
-							name := utils.MustUnquote(rule.Path("HumanReadablePath").String())
-							splintedName := strings.Split(name, ".")
-							componentName = splintedName[len(splintedName)-2]
-						} else if utils.MustUnquote(rule.Path("ChangeOP").String()) == "removed" {
-							componentName = utils.MustUnquote(rule.Path("OldKey").String())
-						} else {
-							componentName = utils.MustUnquote(rule.Path("NewKey").String())
+	if ruleset, err := rulebook.GetRuleSetByResource(r.Name); err == nil {
+		if ruleset != nil {
+			if components, err := ruleset.Children(); err == nil {
+				for _, component := range components {
+					if rulesSlice, err := component.Children(); err == nil {
+						for _, rule := range rulesSlice {
+							rules = append(rules, rules_api.Rule{
+								Path:          utils.MustUnquote(rule.Path("HumanReadablePath").String()),
+								Operation:     utils.MustUnquote(rule.Path("Operation").String()),
+								ComponentName: utils.MustUnquote(rule.Path("AttributeKey").String()),
+								ComponentType: utils.MustUnquote(rule.Path("ResourceComponent").String()),
+								Required:      cast.ToBool(rule.Path("IsRequired").String()),
+								Notification:  utils.MustUnquote(rule.Path("Notification").String()),
+								URL:           utils.MustUnquote(rule.Path("URL").String()),
+							})
 						}
-
-						rules = append(rules, rules_interaction.Rule{
-							Path:          utils.MustUnquote(rule.Path("HumanReadablePath").String()),
-							ComponentName: componentName,
-							ComponentType: utils.MustUnquote(rule.Path("ResourceComponent").String()),
-							Required:      cast.ToBool(rule.Path("Required").String()),
-							Notification:  utils.MustUnquote(rule.Path("Notify").String()),
-						})
 					}
 				}
 			}
 
-			rulesetObj = rules_interaction.RuleSet{
+			rulesetObj = rules_api.RuleSet{
 				ResourceName: r.Name,
 				Rules:        rules,
 			}

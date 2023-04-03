@@ -1,20 +1,8 @@
 resource "aws_s3_bucket" "b" {
   bucket = "my-tf-test-bucket"
 
-
-# The acceleration_status attribute under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
   acceleration_status = {}
-
-# The logging block_type under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_logging resource instead.
   logging = {}
-
-
-
-
-# The required parameter under the aws_s3_bucket resource was removed: .
-# The object_lock_enabled attribute under the aws_s3_bucket resource is now optional.
-# The object_lock_enabled attribute under the aws_s3_bucket resource is now deprecated: Use the top-level parameter object_lock_enabled instead.
-# An 'object_lock_enabled' attribute was added under the aws_s3_bucket resource.
   object_lock_enabled = {}
 
   tags = {
@@ -25,21 +13,8 @@ resource "aws_s3_bucket" "b" {
 resource "aws_s3_bucket" "fasdfasd" {
   bucket = "my-tf-test-bucket"
 
-
-  # The acceleration_status attribute under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
   acceleration_status = {}
-
-  # The logging block_type under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_logging resource instead.
   logging = {}
-
-
-
-
-  # The required parameter under the aws_s3_bucket resource was removed: .
-  # The object_lock_enabled attribute under the aws_s3_bucket resource is now optional.
-  # The object_lock_enabled attribute under the aws_s3_bucket resource is now deprecated: Use the top-level parameter object_lock_enabled instead.
-  # An 'object_lock_enabled' attribute was added under the aws_s3_bucket resource.
-  object_lock_enabled = {}
 
   tags = {
     Name        = "My bucket"
@@ -50,22 +25,10 @@ resource "aws_s3_bucket" "fasdfasd" {
 resource "aws_s3_bucket" "d" {
   bucket = "my-tf-test-bucket"
 
-
-  # The acceleration_status attribute under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
   acceleration_status = {}
-
-  # The logging block_type under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_logging resource instead.
   logging = {}
 
-
-
-
-  # The required parameter under the aws_s3_bucket resource was removed: .
-  # The object_lock_enabled attribute under the aws_s3_bucket resource is now optional.
-  # The object_lock_enabled attribute under the aws_s3_bucket resource is now deprecated: Use the top-level parameter object_lock_enabled instead.
-  # An 'object_lock_enabled' attribute was added under the aws_s3_bucket resource.
   object_lock_configuration {}
-#  object_lock_enabled = {}
 
   tags = {
     Name        = "My bucket"
@@ -76,20 +39,8 @@ resource "aws_s3_bucket" "d" {
 resource "aws_s3_bucket" "c" {
   bucket = "my-tf-test-bucket"
 
-
-  # The acceleration_status attribute under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
   acceleration_status = {}
-
-  # The logging block_type under the aws_s3_bucket resource is now deprecated: Use the aws_s3_bucket_logging resource instead.
   logging = {}
-
-
-
-
-  # The required parameter under the aws_s3_bucket resource was removed: .
-  # The object_lock_enabled attribute under the aws_s3_bucket resource is now optional.
-  # The object_lock_enabled attribute under the aws_s3_bucket resource is now deprecated: Use the top-level parameter object_lock_enabled instead.
-  # An 'object_lock_enabled' attribute was added under the aws_s3_bucket resource.
   object_lock_enabled = {}
 
   tags = {

@@ -2,13 +2,14 @@ package annotate
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/sirrend/terrap-cli/internal/handle_files"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"os"
 	"strings"
 )
 
-func FindAttributeInResourceDeclaration(resource handle_files.Resource, attribute string) int {
+func FindAttributeInResourceDeclaration(resource handle_files.Resource, path string) int {
 	var lines []string
 
 	// Open the file for reading
@@ -27,21 +28,36 @@ func FindAttributeInResourceDeclaration(resource handle_files.Resource, attribut
 		lines = append(lines, scanner.Text())
 	}
 
-	var attributeLine string
+	// declare variables for method
+	posSum := 0
+	splintedPath := strings.Split(path, ".")
+
 	for pos, line := range lines {
-		if strings.Contains(line, resource.Name) {
+		if strings.Contains(line, fmt.Sprintf("%s \"%s\" \"%s\"", resource.Type, resource.Name, resource.Alias)) {
 			codeBlock := utils.GetCodeUntilMatchingBrace(strings.Join(lines[pos:], "\n"))
 
-			for _, functionLine := range strings.Split(codeBlock, "\n") {
-				if strings.Contains(functionLine, attribute) {
-					attributeLine = functionLine
-					break
+		OuterLoop:
+			for _, component := range splintedPath {
+				splintedCodeBlock := strings.Split(codeBlock, "\n")
+				for functionPos, functionLine := range splintedCodeBlock {
+					if strings.Contains(functionLine, component) && !strings.Contains(functionLine, "#") { // validate not a comment
+						if component == splintedPath[len(splintedPath)-1] {
+							posSum += functionPos + pos // add to line in file sum
+							return posSum               // return position in file
+
+						} else {
+							codeBlock = strings.Join(strings.Split(codeBlock, "\n")[functionPos:], "\n") // continue from next codeBlock line after break
+							posSum += functionPos                                                        // add to line in file sum
+
+							break
+						}
+					}
+
+					if splintedCodeBlock[len(splintedCodeBlock)-1] == functionLine {
+						break OuterLoop
+					}
 				}
 			}
-		}
-
-		if strings.Contains(line, attributeLine) {
-			return pos
 		}
 	}
 

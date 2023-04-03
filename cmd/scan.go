@@ -9,7 +9,7 @@ import (
 	"github.com/sirrend/terrap-cli/internal/annotate"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/handle_files"
-	"github.com/sirrend/terrap-cli/internal/rules_interaction"
+	"github.com/sirrend/terrap-cli/internal/rules_api"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/sirrend/terrap-cli/internal/workspace"
@@ -41,20 +41,22 @@ var scanCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		var workspace workspace.Workspace
-		asJson := map[string][]rules_interaction.Rule{}
+		asJson := map[string][]rules_api.Rule{}
 
 		if utils.IsInitialized(".") {
-			resources, _ := handle_files.ScanFolderRecursively(".")
+			resources, err := handle_files.ScanFolderRecursively(".")
+			if err != nil {
+				_, _ = commons.RED.Println(err)
+			}
 
-			err := state.Load("./.terrap.json", &workspace)
+			err = state.Load("./.terrap.json", &workspace)
 			if err != nil {
 				_, _ = commons.RED.Println(err)
 			}
 
 			// go over every provider in user's folder
 			for provider, version := range workspace.Providers {
-				rulebookName := rules_interaction.FindRulebookFile(provider, version.String())
-				rulebook, _ := rules_interaction.GetRulebook(rulebookName, version.String(), "")
+				rulebook, _ := rules_api.GetRules(provider, version.String())
 
 				if !cmd.Flag("annotate").Changed {
 					for _, resource := range GetUniqResources(resources) {
@@ -87,7 +89,7 @@ var scanCmd = &cobra.Command{
 							_, _ = commons.RED.Println(err)
 							os.Exit(1)
 						}
-
+						
 						annotate.AddAnnotationByRuleSet(resource, ruleset)
 
 					}

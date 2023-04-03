@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/sirrend/terrap-cli/internal/handle_files"
-	"github.com/sirrend/terrap-cli/internal/rules_interaction"
+	"github.com/sirrend/terrap-cli/internal/rules_api"
 	"os"
 )
 
@@ -51,9 +51,9 @@ func AddLineInPosition(resource handle_files.Resource, newLine string, pos int) 
 	writer.Flush()
 }
 
-func AddAnnotationByRuleSet(resource handle_files.Resource, ruleSet rules_interaction.RuleSet) {
+func AddAnnotationByRuleSet(resource handle_files.Resource, ruleSet rules_api.RuleSet) {
 	for _, rule := range ruleSet.Rules {
-		pos := FindAttributeInResourceDeclaration(resource, rule.ComponentName)
+		pos := FindAttributeInResourceDeclaration(resource, rule.Path)
 
 		if pos != 0 {
 			AddLineInPosition(resource, "\n# "+rule.Notification, pos)

@@ -3,7 +3,10 @@ resource "aws_s3_bucket" "d" {
   alias = "test"
 
   logging {}
-  object_lock_enabled = {}
+
+  object_lock_configuration {
+    object_lock_enabled = ""
+  }
 
   tags = {
     Name        = "My bucket"
@@ -17,4 +20,11 @@ resource "aws_s3_bucket_acl" "example13" {
 }
 
 data "aws_s3_account_public_access_block" "example2d" {
+}
+
+resource "aws_s3_bucket_replication_configuration" "test" {
+  token = ""
+  bucket = ""
+  role = ""
+  rule {}
 }
