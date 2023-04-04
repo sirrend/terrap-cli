@@ -7,6 +7,8 @@ resource "aws_s3_bucket" "c" {
   }
 }
 
+
+# A new resource named aws_s3_bucket_acl is now available
 resource "aws_s3_bucket_acl" "example1" {
   bucket = aws_s3_bucket.c.id
   acl    = "private"

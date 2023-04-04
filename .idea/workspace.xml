@@ -5,20 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="000efb24-97c5-4cc8-906f-1b9373634141" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/rules_api/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/rules_api/rule.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/rules_api/rulebook.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/rules_api/rules.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/rules_api/ruleset.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/scan.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/scan.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/annotate/look_for.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/annotate/look_for.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/annotate/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/annotate/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handle_files/resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/commons/commons.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/commons/commons.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/utils/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/utils/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/init.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/init.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/module/test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/module/test/test.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/test.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

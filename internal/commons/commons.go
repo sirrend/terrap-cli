@@ -14,9 +14,10 @@ var (
 	RULES_BUCKET        = "terrap-rulebooks"
 	RULES_BUCKET_REGION = "eu-central-1"
 
-	YELLOW = color.New(color.FgYellow)
-	GREEN  = color.New(color.FgGreen)
-	RED    = color.New(color.BgRed)
+	YELLOW  = color.New(color.FgYellow)
+	GREEN   = color.New(color.FgGreen)
+	RED     = color.New(color.BgRed)
+	SIRREND = color.New(color.FgMagenta)
 )
 
 func getUserHomeDir() string {

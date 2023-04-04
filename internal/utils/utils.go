@@ -368,25 +368,3 @@ func GetCodeUntilMatchingBrace(input string) string {
 
 	return output
 }
-
-// FindItemIndexInSlice
-/*
-@brief:
-	FindItemIndexInSlice finds an ite, inside a given slice
-@params:
-	list - []string - slice of strings
-	itemToFind - string - the item to find
-@returns:
-	int - the position of the item if found, else -1
-*/
-func FindItemIndexInSlice(list []string, itemToFind string) int {
-	index := -1
-	for i, item := range list {
-		if item == itemToFind {
-			index = i
-			break
-		}
-	}
-
-	return index
-}
