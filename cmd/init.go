@@ -51,18 +51,18 @@ func terraformInit(dir string) {
 			fmt.Println(err.Error())
 
 		}
-		_, _ = commons.GREEN.Println("Done!")
+		_, _ = commons.GREEN.Println(" Done!")
 
 		_, _ = commons.YELLOW.Print(emoji.Toolbox, " Looking for providers...")
 		providers.FindTfProviders(dir, &mainWorkspace) //find all providers and assign to mainWorkspace
-		_, _ = commons.GREEN.Println("Done!")
+		_, _ = commons.GREEN.Println(" Done!")
 
 		_, _ = commons.YELLOW.Print(emoji.WavingHand, " Saving workspace...")
 		saveInitData() //Save to configuration file
-		_, _ = commons.GREEN.Println("Done!")
+		_, _ = commons.GREEN.Println(" Done!")
 
 	} else {
-		_, _ = commons.YELLOW.Print("Folder already initialized..")
+		_, _ = commons.YELLOW.Println("Folder already initialized..")
 		os.Exit(0)
 
 	}
@@ -88,10 +88,19 @@ func deleteInitData(dir string) {
 	_, _ = commons.YELLOW.Print(emoji.Broom, " Cleaning up former configuration...")
 	err := os.Remove(path.Join(dir, ".terrap.json"))
 	if err != nil {
+		_, _ = commons.GREEN.Println(" Nothing to do.")
 		_, _ = commons.YELLOW.Println("The given directory is not initialized.")
 		os.Exit(1)
 	}
-	_, _ = commons.GREEN.Println("Done!")
+
+	err = os.RemoveAll(path.Join(dir, ".terraform"))
+	if err != nil {
+		fmt.Println(err)
+		_, _ = commons.GREEN.Println(" Nothing to do.")
+		_, _ = commons.YELLOW.Println("The given directory is not initialized.")
+		os.Exit(1)
+	}
+	_, _ = commons.GREEN.Println(" Done!")
 }
 
 // the init command declaration
@@ -112,11 +121,13 @@ var initCmd = &cobra.Command{
 				os.Exit(0)
 			}
 
-			if cmd.Flag("current-directory").Changed {
-				c, _ := os.Getwd() // get current directory
-				deleteInitData(c)
-			} else {
-				deleteInitData(cmd.Flag("directory").Value.String())
+			if cmd.Flag("current-directory").Changed || cmd.Flag("directory").Changed {
+				if cmd.Flag("current-directory").Changed {
+					c, _ := os.Getwd() // get current directory
+					deleteInitData(c)
+				} else {
+					deleteInitData(cmd.Flag("directory").Value.String())
+				}
 			}
 
 		} else if cmd.Flag("upgrade").Changed {
@@ -145,10 +156,10 @@ var initCmd = &cobra.Command{
 			}
 
 		} else if cmd.Flag("directory").Changed {
-			sirrendLogoPrint()
-			fmt.Println()
-
 			if utils.IsDir(cmd.Flag("directory").Value.String()) {
+				sirrendLogoPrint()
+				fmt.Println()
+
 				d, _ := filepath.Abs(cmd.Flag("directory").Value.String())
 				mainWorkspace.Location = d
 				terraformInit(d)
@@ -175,7 +186,7 @@ var initCmd = &cobra.Command{
 			fmt.Println()
 			_, _ = commons.SIRREND.Println(emoji.BeerMug, "Terrap Initialized Successfully!")
 		} else {
-			_, _ = commons.YELLOW.Println(emoji.CrossMark, " One of -c / -d must be set.")
+			_, _ = commons.YELLOW.Println("One of -c / -d must be set.")
 		}
 	},
 }
