@@ -28,7 +28,7 @@ var mainWorkspace = workspace.Workspace{}
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "terrap",
-	Short: "CLI utility used to notify for provider changes in your code.",
+	Short: "CLI utility used to notify about provider changes in your code.",
 
 	// Run: func(cmd *cobra.Command, args []string) { },
 }
