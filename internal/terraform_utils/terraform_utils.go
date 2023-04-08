@@ -4,12 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/enescakir/emoji"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hc-install/product"
 	"github.com/hashicorp/hc-install/releases"
 	"github.com/hashicorp/terraform-exec/tfexec"
 	ver "github.com/hashicorp/terraform/version"
-	"log"
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -33,8 +36,8 @@ func IsTerraformInstalled() bool {
 /*
 @brief: InstallTf installs terraform if not present
 @
-@returns: execPath - the path to the terraform executable
-@         tv - the terraform version
+@returns: execPath - the path to the Terraform executable
+@         tv - the Terraform version
 */
 
 func InstallTf() (execPath string, tv string) {
@@ -44,24 +47,30 @@ func InstallTf() (execPath string, tv string) {
 		var tVersion terraformVersion
 		path, err := exec.LookPath("terraform")
 		if err != nil {
-			log.Fatal(err)
+			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed with the following error: ")
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
 		j, err := exec.Command("terraform", "version", "--json").Output()
 
 		if err != nil {
-			log.Fatalf("error getting terraform version: %s", err)
+			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed while fetching Terraform version: ")
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
 
 		err = json.Unmarshal(j, &tVersion)
 
 		if err != nil {
-			log.Fatalf("error unmarshalling terraform version: %s", err)
+			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed with the following error: ")
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
 
 		return path, tVersion.Terraform_version
 
 	} else {
-		log.Println("installing terraform version ", ver.Version)
+		_, _ = commons.YELLOW.Println("Installing terraform version:", ver.Version)
 
 		// set installer details
 		installer := &releases.ExactVersion{
@@ -72,7 +81,9 @@ func InstallTf() (execPath string, tv string) {
 		// install terraform in context of the given directory
 		execPath, err := installer.Install(context.Background())
 		if err != nil {
-			log.Fatalf("error installing Terraform: %s", err)
+			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed while installing Terraform: ")
+			fmt.Println(err.Error())
+			os.Exit(1)
 		}
 
 		return execPath, ver.Version
@@ -80,18 +91,20 @@ func InstallTf() (execPath string, tv string) {
 }
 
 /*
-@brief: NewTerraformExecuter creates a new terraform executer
+@brief: NewTerraformExecutor creates a new terraform executor
 @
 @params: dir - the directory to run terraform in
 @        execPath - the path to the Terraform executable
-@returns: *tfexec.Terraform - the terraform executer
+@returns: *tfexec.Terraform - the terraform executor
 */
 
 func NewTerraformExecuter(dir string, execPath string) *tfexec.Terraform {
 	dir, _ = filepath.Abs(dir)
 	tf, err := tfexec.NewTerraform(dir, execPath)
 	if err != nil {
-		log.Fatalf("error running NewTerraform: %s", err)
+		_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed with the following error: ")
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	return tf
@@ -104,7 +117,7 @@ func NewTerraformExecuter(dir string, execPath string) *tfexec.Terraform {
 */
 
 func TerraformInit(dir string) (string, string, error) {
-	execPath, terraformVersion := InstallTf()
+	execPath, terraformToolVersion := InstallTf()
 
 	tf := NewTerraformExecuter(dir, execPath)
 
@@ -112,14 +125,12 @@ func TerraformInit(dir string) (string, string, error) {
 	err := tf.Init(context.Background(), tfexec.Upgrade(true))
 	if err != nil {
 		if strings.Contains(err.Error(), "net/http") {
-			//log.Panicf("Terraform init error: Terrap experienced networking issues, please make sure you have a stable internet connection.")
-			err = errors.New("terrap experienced networking issues, please make sure you have a stable internet connection")
+			err = errors.New("Terrap experienced some networking issues, please make sure you have a stable internet connection")
 			return "", "", err
 		} else {
-			//log.Panicf("Terraform init error: %s", err.Error())
 			return "", "", err
 		}
 	}
 
-	return execPath, terraformVersion, nil
+	return execPath, terraformToolVersion, nil
 }

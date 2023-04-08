@@ -11,6 +11,25 @@ type RuleSet struct {
 	Rules        []Rule `json:"Changes"`
 }
 
+// GetNewComponents
+/*
+@brief:
+	GetNewComponents finds all the new components in the next version
+@returns:
+	[]string - a slice of notifications of what's new
+*/
+func (r RuleSet) GetNewComponents() []string {
+	var newComponents []string
+
+	for _, rule := range r.Rules {
+		if rule.IsNew() {
+			newComponents = append(newComponents, rule.Notification)
+		}
+	}
+
+	return newComponents
+}
+
 // PrettyPrint
 /*
 @brief:
@@ -24,6 +43,22 @@ func (r RuleSet) PrettyPrint() {
 
 		for _, rule := range r.Rules {
 			rule.PrettyPrint()
+		}
+	}
+}
+
+// PrettyPrintWhatsNew
+/*
+@brief:
+	PrettyPrintWhatsNew prints the RuleSet new objects
+*/
+func (r RuleSet) PrettyPrintWhatsNew() {
+	if len(r.GetNewComponents()) > 0 {
+		_, _ = commons.GREEN.Print("Resource Name: ")
+		fmt.Println(r.ResourceName)
+
+		for _, rule := range r.Rules {
+			rule.PrettyPrintWhatsNew()
 		}
 	}
 }

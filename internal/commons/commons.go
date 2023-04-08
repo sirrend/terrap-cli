@@ -7,16 +7,12 @@ import (
 )
 
 var (
-	TERRAP_HOME_FOLDER      = path.Join(getUserHomeDir(), ".terrap")
-	TERRAP_PROVIDERS_FOLDER = path.Join(getUserHomeDir(), ".terrap", "providers")
-	TERRAP_CONFIG_FILE      = path.Join(getUserHomeDir(), ".terrap", "config")
-
-	RULES_BUCKET        = "terrap-rulebooks"
-	RULES_BUCKET_REGION = "eu-central-1"
+	TerrapProvidersFolder = path.Join(getUserHomeDir(), ".terrap", "providers")
+	TerrapConfigFile      = path.Join(getUserHomeDir(), ".terrap", "config")
 
 	YELLOW  = color.New(color.FgYellow)
 	GREEN   = color.New(color.FgGreen)
-	RED     = color.New(color.BgRed)
+	RED     = color.New(color.FgRed)
 	SIRREND = color.New(color.FgMagenta)
 )
 

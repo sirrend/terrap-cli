@@ -50,7 +50,7 @@ func CreateProviderBlockTemplate() (*hclwrite.Body, *hclwrite.File) {
 
 func GetSchemaByProvider(context workspace.Workspace, provider string) (*gabs.Container, error) {
 	ver, _ := GetVersionByProvider(context, provider)
-	byteValue, err := utils.GetFileContentAsBytes(path.Join(commons.TERRAP_PROVIDERS_FOLDER, provider, ver))
+	byteValue, err := utils.GetFileContentAsBytes(path.Join(commons.TerrapProvidersFolder, provider, ver))
 	if err != nil {
 		return gabs.New(), err
 	} else {

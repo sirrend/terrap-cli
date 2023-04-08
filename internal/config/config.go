@@ -36,7 +36,7 @@ func PrintNotConfiguredMessage() {
 */
 
 func IsConfigured() bool {
-	if utils.DoesExist(commons.TERRAP_CONFIG_FILE) {
+	if utils.DoesExist(commons.TerrapConfigFile) {
 		return true
 	}
 

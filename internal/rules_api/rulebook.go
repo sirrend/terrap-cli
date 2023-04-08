@@ -1,13 +1,26 @@
 package rules_api
 
 import (
+	"encoding/json"
 	"github.com/Jeffail/gabs"
+	"github.com/sirrend/terrap-cli/internal/utils"
+	"os"
 )
 
 // Rulebook is holding the rulebook as bytes alongside relevant metadata
 type Rulebook struct {
 	SourceVersion string
+	TargetVersion string
 	Bytes         []byte
+}
+
+func (r Rulebook) GetTargetVersion() string {
+	jsonRuleBook, err := gabs.ParseJSON(r.Bytes)
+	if err != nil {
+		return ""
+	}
+
+	return utils.MustUnquote(jsonRuleBook.Path("RuleBookSettings.TargetVersion").String())
 }
 
 // GetRuleSetByResource
@@ -26,33 +39,31 @@ func (r Rulebook) GetRuleSetByResource(resourceName string) (rule *gabs.Containe
 		return &gabs.Container{}, err
 	}
 
-	exists, err := r.doesRuleExistForResource(resourceName)
-	if exists {
+	if jsonRuleBook.ExistsP(resourceName) {
 		return jsonRuleBook.Path(resourceName), nil
 	}
 
 	return &gabs.Container{}, err
 }
 
-// doesRuleExistForResource
+// GetAllRuleSets
 /*
 @brief:
-	doesRuleExistForResource checks if a rule exist for a given resource
-@params:
-	resourceName - string - the resource name to check existence for
+	GetAllRuleSets returns all RuleSets in a rulebook
 @returns:
-	bool - true if exists, false otherwise
+	map[string]interface{} - the rules as a map of interfaces
 	error - if exists, else nil
 */
-func (r Rulebook) doesRuleExistForResource(resourceName string) (bool, error) {
-	jsonRuleSet, err := gabs.ParseJSON(r.Bytes)
+func (r Rulebook) GetAllRuleSets() (map[string]interface{}, error) {
+	jsonRuleBook, err := gabs.ParseJSON(r.Bytes)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	if jsonRuleSet.Path(resourceName) != nil {
-		return true, nil
+	data := make(map[string]interface{})
+	if err = json.Unmarshal(jsonRuleBook.Bytes(), &data); err != nil {
+		os.Exit(1)
 	}
 
-	return false, nil
+	return data, nil
 }

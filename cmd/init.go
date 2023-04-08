@@ -16,6 +16,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/common-nighthawk/go-figure"
 	"github.com/spf13/cobra"
@@ -39,11 +40,18 @@ func terraformInit(dir string) {
 		_, _ = commons.YELLOW.Print(emoji.Rocket, " Initializing directory...")
 		mainWorkspace.ExecPath,
 			mainWorkspace.TerraformVersion, err = terraform_utils.TerraformInit(dir) // initiate new terraform tool in context
-		_, _ = commons.GREEN.Println("Done!")
 
 		if err != nil {
-			fmt.Printf("Failed initializing the given directory with the following error: %e", err)
+			fmt.Println()
+			if strings.Contains(err.Error(), "AccessDenied") {
+				_, _ = commons.RED.Println(emoji.CrossMark, "Failed initializing the given directory with the following error: ")
+				fmt.Println("   Access Denied to:", dir)
+				os.Exit(1)
+			}
+			fmt.Println(err.Error())
+
 		}
+		_, _ = commons.GREEN.Println("Done!")
 
 		_, _ = commons.YELLOW.Print(emoji.Toolbox, " Looking for providers...")
 		providers.FindTfProviders(dir, &mainWorkspace) //find all providers and assign to mainWorkspace
@@ -66,7 +74,7 @@ func terraformInit(dir string) {
 func saveInitData() {
 	err := state.Save(path.Join(mainWorkspace.Location, ".terrap.json"), mainWorkspace)
 	if err != nil {
-		fmt.Println(err)
+		_, _ = commons.RED.Println("Terrap failed saving the current workspace.")
 		os.Exit(1)
 	}
 }
@@ -155,11 +163,19 @@ var initCmd = &cobra.Command{
 			sirrendLogoPrint()
 			fmt.Println()
 
-			mainWorkspace.Location, _ = os.Getwd() // get current directory
+			location, err := os.Getwd() // get current directory
+			if err != nil {
+				_, _ = commons.RED.Print(emoji.AngryFace, "Failed with the following error: ")
+				fmt.Println(err.Error())
+				os.Exit(1)
+			}
+			mainWorkspace.Location = location
 			terraformInit(mainWorkspace.Location)
 
 			fmt.Println()
 			_, _ = commons.SIRREND.Println(emoji.BeerMug, "Terrap Initialized Successfully!")
+		} else {
+			_, _ = commons.YELLOW.Println(emoji.CrossMark, " One of -c / -d must be set.")
 		}
 	},
 }

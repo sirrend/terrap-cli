@@ -5,6 +5,8 @@ Copyright © 2023 Sirrend
 package cmd
 
 import (
+	"fmt"
+	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
 	"github.com/sirrend/terrap-cli/internal/annotate"
 	"github.com/sirrend/terrap-cli/internal/commons"
@@ -15,6 +17,12 @@ import (
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
 	"os"
+	"strings"
+)
+
+var (
+	PRINTED        = false
+	upgradeMessage = ""
 )
 
 func GetUniqResources(resources []handle_files.Resource) []handle_files.Resource {
@@ -75,12 +83,26 @@ var scanCmd = &cobra.Command{
 							// print human-readable output
 						} else {
 							ruleset.PrettyPrint()
+							if len(ruleset.Rules) != 0 {
+								PRINTED = true
+							}
 						}
 					}
 
 					// print json object
 					if cmd.Flag("json").Changed {
 						utils.PrettyPrintStruct(asJson)
+						if len(asJson) != 0 {
+							PRINTED = true
+						}
+					}
+
+					if !PRINTED {
+						upgradeMessage += fmt.Sprintf("  %s  %s: ",
+							emoji.UpArrow, strings.ReplaceAll(provider, "registry.terraform.io/", ""))
+						upgradeMessage += commons.GREEN.Sprintf("%s -> %s\n", version, rulebook.TargetVersion)
+
+						PRINTED = false // for next provider
 					}
 				} else {
 					for _, resource := range resources {
@@ -89,10 +111,17 @@ var scanCmd = &cobra.Command{
 							_, _ = commons.RED.Println(err)
 							os.Exit(1)
 						}
-						
+
 						annotate.AddAnnotationByRuleSet(resource, ruleset)
 
 					}
+				}
+			}
+
+			if !cmd.Flag("no-safe-upgrade-message").Changed {
+				if len(upgradeMessage) != 0 {
+					_, _ = commons.SIRREND.Println("You are safe to upgrade the following providers: ")
+					fmt.Print(upgradeMessage)
 				}
 			}
 
@@ -109,4 +138,5 @@ func init() {
 	// scan command flags
 	scanCmd.Flags().BoolP("json", "j", false, "Print scan output as json.")
 	scanCmd.Flags().BoolP("annotate", "a", false, "Annotate the code itself.")
+	scanCmd.Flags().BoolP("no-safe-upgrade-message", "n", false, "Don't print which providers are safe to upgrade")
 }

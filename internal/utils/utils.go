@@ -12,43 +12,9 @@ import (
 	"log"
 	"os"
 	"path"
-	"regexp"
 	"strconv"
 	"strings"
 )
-
-/*
-@brief: GetVersionFromString grep version with semantic format from text
-@
-@params: strWithVersion - string - the string to match the version from
-@
-@return: the matched version
-*/
-
-func GetVersionFromString(strWithVersion string) string {
-	r, _ := regexp.Compile("(\\d{1}|\\d{2}|\\d{3}|\\d{4})[.](\\d{1}|\\d{2}|\\d{3}|\\d{4})[.](\\d{1}|\\d{2}|\\d{3}|\\d{4})")
-	match := r.FindString(strWithVersion)
-
-	return match
-}
-
-/*
-@brief: write interface into file
-@
-@params: object - interface{} - can be any object, fileName - string - the file name to be created
-@
-@Return: error
-*/
-
-func WriteInterfaceToFile(object interface{}, fileName string) error {
-	marshal, _ := Marshal(object)
-	err := os.WriteFile(fileName, StreamToByte(marshal), 0644)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
 
 /*
 @brief: turn stream into byte slice
@@ -62,53 +28,6 @@ func StreamToByte(stream io.Reader) []byte {
 	buf := new(bytes.Buffer)
 	_, _ = buf.ReadFrom(stream)
 	return buf.Bytes()
-}
-
-/*
-@brief: PrintSlice print out the file content
-@
-@params: path - string - path to file
-*/
-
-func PrintSlice(path string) {
-	lines, err := ReadLines(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, value := range lines {
-		fmt.Printf("%v\n", value)
-	}
-}
-
-/*
-@brief: ReadLines read file's content
-@
-@params: path - string - path to file
-@
-@returns: []string - the lines from the file received
-@		  error - if exist
-*/
-
-func ReadLines(path string) ([]string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(file)
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines, scanner.Err()
 }
 
 /*
@@ -143,26 +62,6 @@ func GetFileContentAsBytes(path string) ([]byte, error) {
 }
 
 /*
-@brief: CreateDirIfNotExist creates a dir if not present
-@
-@params: dir - string - path to dir
-@        perm - os.FileMode - permission of the folder
-@
-@returns: error - if exist
-*/
-
-func CreateDirIfNotExist(dir string, perm os.FileMode) error {
-	if !DoesExist(dir) {
-		err := os.MkdirAll(dir, perm)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-/*
 @brief: IsDir checks if a path is a dir
 @
 @params: p - the path to check
@@ -179,38 +78,6 @@ func IsDir(p string) bool {
 	}
 
 	return fileInfo.IsDir()
-}
-
-/*
-@brief: FindFileByExtension finds the files with the given extension in the given folder
-@
-@params: dir string - the folder to find the wanted files in
-@
-@returns: []string - list of files with {extension} in the given folder
-*/
-
-func FindFilesByExtension(dir string, ext string) []string {
-	extFiles := make([]string, 0)
-	fmt.Println("scanning for terraform files in", dir)
-	files, err := ioutil.ReadDir(dir)
-
-	if err != nil {
-		log.Fatal(err)
-
-	} else {
-		for _, file := range files {
-			if file.IsDir() && file.Name()[0:1] != "." { // check if it's a directory and not a hidden directory
-				FindFilesByExtension(file.Name(), ext)
-			} else {
-				if strings.HasSuffix(file.Name(), ext) {
-					fmt.Println(file.Name())
-					extFiles = append(extFiles, dir+file.Name())
-				}
-			}
-		}
-	}
-
-	return extFiles
 }
 
 /*
@@ -367,4 +234,21 @@ func GetCodeUntilMatchingBrace(input string) string {
 	}
 
 	return output
+}
+
+// GetFirstKeyInMap
+/*
+@brief:
+	GetFirstKeyInMap finds the first key in a map[string]interface{} object
+@params:
+	m map[string]interface{} - the map to go over
+@returns:
+	string - the first key, or "" if empty
+*/
+func GetFirstKeyInMap(m map[string]interface{}) string {
+	for key, _ := range m {
+		return key
+	}
+
+	return ""
 }

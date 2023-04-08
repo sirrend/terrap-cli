@@ -11,10 +11,10 @@ import (
 @brief:
 	GetRules retrieves a rulebook from the API
 @params:
-	rulebookName - string - the rulebook name
+	provider - string - the provider name
 	sourceVersion - string - the source version
 @returns:
-	Rules - the downloaded rules
+	Rulebook - the initializes Rulebook
 	error - if exists, else nil
 */
 func GetRules(provider, sourceVersion string) (Rulebook, error) {
@@ -39,8 +39,11 @@ func GetRules(provider, sourceVersion string) (Rulebook, error) {
 	// read body
 	body := utils.StreamToByte(res.Body)
 
-	return Rulebook{
+	rulebook := Rulebook{
 		SourceVersion: sourceVersion,
 		Bytes:         body,
-	}, nil
+	}
+	rulebook.TargetVersion = rulebook.GetTargetVersion()
+
+	return rulebook, nil
 }
