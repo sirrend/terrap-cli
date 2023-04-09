@@ -14,7 +14,7 @@ type Rule struct {
 	ComponentType string `json:"ComponentType"`
 	Required      bool   `json:"Required"`
 	Notification  string `json:"Notification"`
-	URL           string `json:"URL"`
+	URL           string `json:"Docs"`
 }
 
 // IsNew

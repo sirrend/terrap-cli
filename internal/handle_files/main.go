@@ -54,10 +54,21 @@ func ScanFile(fileName string) (resources []Resource, err error) {
 	error - if exists, else nil
 */
 func ScanFolder(dir string) (resources []Resource, err error) {
+	var moduleResources []Resource
+
 	if tfconfig.IsModuleDir(dir) {
 		inspect, diag := tfconfig.LoadModule(dir)
 		if diag.HasErrors() {
 			return resources, diag.Err()
+		}
+
+		// go over all modules in the folder in context
+		for _, module := range inspect.ModuleCalls {
+			if tempModuleResources, err := GetLocalModuleResources(dir, *module); err == nil {
+				moduleResources = append(moduleResources, tempModuleResources...)
+			} else {
+				return resources, err
+			}
 		}
 
 		// combine both maps into one
@@ -70,6 +81,7 @@ func ScanFolder(dir string) (resources []Resource, err error) {
 			return nil, err
 		}
 
+		resources = append(resources, moduleResources...) // combine bote module resources and current directory resources together
 		return resources, nil
 	}
 

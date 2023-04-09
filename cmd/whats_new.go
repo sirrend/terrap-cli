@@ -45,7 +45,7 @@ var whatsNewCmd = &cobra.Command{
 
 				for resourceName, _ := range ruleSets { // go over all ruleSets
 					resource := handle_files.Resource{Name: resourceName}
-					ruleset, err := resource.GetRuleset(rulebook)
+					ruleset, err := resource.GetRuleset(rulebook, nil)
 					if err != nil {
 						os.Exit(1)
 					}

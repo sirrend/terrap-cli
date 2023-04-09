@@ -7,8 +7,9 @@ import (
 
 // RuleSet is holding the ruleset as a gabs.Container object alongside relevant metadata
 type RuleSet struct {
-	ResourceName string `json:"ResourceName"`
-	Rules        []Rule `json:"Changes"`
+	ResourceName string   `json:"ResourceName"`
+	Appearances  []string `json:"Appearances"`
+	Rules        []Rule   `json:"Changes"`
 }
 
 // GetNewComponents
@@ -44,6 +45,13 @@ func (r RuleSet) PrettyPrint() {
 		for _, rule := range r.Rules {
 			rule.PrettyPrint()
 		}
+
+		fmt.Println("  Appearances:")
+		for _, appear := range r.Appearances {
+			_, _ = commons.YELLOW.Println("    " + appear)
+		}
+
+		fmt.Println()
 	}
 }
 

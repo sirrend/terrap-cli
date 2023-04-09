@@ -41,20 +41,20 @@ func IsTerraformInstalled() bool {
 */
 
 func InstallTf() (execPath string, tv string) {
-	if IsTerraformInstalled() {
-		//log.Println("terraform is installed, using the installed executer.")
+	terraformUserVersion := os.Getenv("TERRAP_TERRAFORM_VERSION") // user decided he wants a specific version
 
+	if IsTerraformInstalled() && terraformUserVersion == "" {
 		var tVersion terraformVersion
 		path, err := exec.LookPath("terraform")
 		if err != nil {
-			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed with the following error: ")
+			_, _ = commons.RED.Print(emoji.CrossMark, " Terrap failed with the following error: ")
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
 		j, err := exec.Command("terraform", "version", "--json").Output()
 
 		if err != nil {
-			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed while fetching Terraform version: ")
+			_, _ = commons.RED.Print(emoji.CrossMark, " Terrap failed while fetching Terraform version: ")
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
@@ -62,15 +62,15 @@ func InstallTf() (execPath string, tv string) {
 		err = json.Unmarshal(j, &tVersion)
 
 		if err != nil {
-			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed with the following error: ")
+			_, _ = commons.RED.Print(emoji.CrossMark, " Terrap failed with the following error: ")
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
 
 		return path, tVersion.Terraform_version
 
-	} else {
-		_, _ = commons.YELLOW.Println("Installing terraform version:", ver.Version)
+	} else if terraformUserVersion != "" {
+		_, _ = commons.YELLOW.Println(emoji.DesktopComputer, "Using Terraform version:", terraformUserVersion)
 
 		// set installer details
 		installer := &releases.ExactVersion{
@@ -81,7 +81,25 @@ func InstallTf() (execPath string, tv string) {
 		// install terraform in context of the given directory
 		execPath, err := installer.Install(context.Background())
 		if err != nil {
-			_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed while installing Terraform: ")
+			_, _ = commons.RED.Print(emoji.CrossMark, " Terrap failed while installing Terraform: ")
+			fmt.Println(err.Error())
+			os.Exit(1)
+		}
+
+		return execPath, ver.Version
+	} else {
+		_, _ = commons.YELLOW.Println(emoji.DesktopComputer, "Using Terraform version:", ver.Version)
+
+		// set installer details
+		installer := &releases.ExactVersion{
+			Product: product.Terraform,
+			Version: version.Must(version.NewVersion(ver.Version)),
+		}
+
+		// install terraform in context of the given directory
+		execPath, err := installer.Install(context.Background())
+		if err != nil {
+			_, _ = commons.RED.Print(emoji.CrossMark, " Terrap failed while installing Terraform: ")
 			fmt.Println(err.Error())
 			os.Exit(1)
 		}
@@ -102,7 +120,7 @@ func NewTerraformExecuter(dir string, execPath string) *tfexec.Terraform {
 	dir, _ = filepath.Abs(dir)
 	tf, err := tfexec.NewTerraform(dir, execPath)
 	if err != nil {
-		_, _ = commons.RED.Print(emoji.CrossMark, "Terrap failed with the following error: ")
+		_, _ = commons.RED.Print("\n", emoji.CrossMark, " Terrap failed with the following error: ")
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}

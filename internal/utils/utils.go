@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -251,4 +252,38 @@ func GetFirstKeyInMap(m map[string]interface{}) string {
 	}
 
 	return ""
+}
+
+// GetAbsPath
+/*
+@brief:
+	GetAbsPath finds the absolute path of an object
+@params:
+	path - string - the path to fins abs of
+@returns:
+	string - the absolute path
+*/
+func GetAbsPath(path string) string {
+	abs, _ := filepath.Abs(path)
+	return abs
+}
+
+// IsItemInSlice
+/*
+@brief:
+	IsItemInSlice checks if a given item is inside a given slice
+@params:
+	item - string - the item to look for
+	items - []string - the slice to look in
+@returns:
+	bool - true if exists else false
+*/
+func IsItemInSlice(item string, items []string) bool {
+	for _, i := range items {
+		if i == item {
+			return true
+		}
+	}
+
+	return false
 }

@@ -5,7 +5,9 @@ import (
 	"github.com/hashicorp/hcl/v2/hclparse"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
+	"github.com/sirrend/terrap-cli/internal/utils"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -76,9 +78,11 @@ func analyzeResources(resources map[string]*tfconfig.Resource) ([]Resource, erro
 		}
 
 		for _, block := range blocks {
-			if strings.Contains(resourceData.Type+"."+resourceData.Name, block.Labels()[0]+"."+block.Labels()[1]) {
-				r.Init(block, resourceData)
-				break // stop searching after allocating the right block
+			if block.Type() == "data" || block.Type() == "resource" {
+				if strings.Contains(resourceData.Type+"."+resourceData.Name, block.Labels()[0]+"."+block.Labels()[1]) {
+					r.Init(block, resourceData)
+					break // stop searching after allocating the right block
+				}
 			}
 		}
 
@@ -86,4 +90,29 @@ func analyzeResources(resources map[string]*tfconfig.Resource) ([]Resource, erro
 	}
 
 	return analyzedResources, nil
+}
+
+// GetLocalModuleResources
+/*
+@brief:
+	GetLocalModuleResources returns local module's resources
+@params:
+	dir - string - the folder to look in
+	module - tfconfig.ModuleCall - the module
+@returns:
+	resources - []*Resource - map of all resources found in the given folder and its attributes'
+	error - if exists, else nil
+*/
+func GetLocalModuleResources(dir string, module tfconfig.ModuleCall) ([]Resource, error) {
+	abs := utils.GetAbsPath(filepath.Join(dir, module.Source))
+	if utils.DoesExist(abs) {
+		tempModuleResources, err := ScanFolder(abs)
+		if err != nil {
+			return nil, err
+		}
+
+		return tempModuleResources, nil
+	}
+
+	return nil, nil
 }

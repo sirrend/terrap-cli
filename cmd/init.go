@@ -37,7 +37,7 @@ func terraformInit(dir string) {
 	_, err := os.Stat(path.Join(dir, ".terrap.json"))
 
 	if err != nil {
-		_, _ = commons.YELLOW.Print(emoji.Rocket, " Initializing directory...")
+		_, _ = commons.YELLOW.Println(emoji.Rocket, "Initializing directory...")
 		mainWorkspace.ExecPath,
 			mainWorkspace.TerraformVersion, err = terraform_utils.TerraformInit(dir) // initiate new terraform tool in context
 
@@ -49,9 +49,9 @@ func terraformInit(dir string) {
 				os.Exit(1)
 			}
 			fmt.Println(err.Error())
+			os.Exit(1)
 
 		}
-		_, _ = commons.GREEN.Println(" Done!")
 
 		_, _ = commons.YELLOW.Print(emoji.Toolbox, " Looking for providers...")
 		providers.FindTfProviders(dir, &mainWorkspace) //find all providers and assign to mainWorkspace

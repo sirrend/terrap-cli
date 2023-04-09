@@ -109,7 +109,7 @@ func (r Resource) IsResource() bool {
 	*gabs.Container - the ruleset to execute
 	error - if exists
 */
-func (r Resource) GetRuleset(rulebook rules_api.Rulebook) (rulesetObj rules_api.RuleSet, err error) {
+func (r Resource) GetRuleset(rulebook rules_api.Rulebook, appearances map[string][]string) (rulesetObj rules_api.RuleSet, err error) {
 	var rules []rules_api.Rule
 
 	if ruleset, err := rulebook.GetRuleSetByResource(r.Name); err == nil {
@@ -134,6 +134,7 @@ func (r Resource) GetRuleset(rulebook rules_api.Rulebook) (rulesetObj rules_api.
 
 			rulesetObj = rules_api.RuleSet{
 				ResourceName: r.Name,
+				Appearances:  appearances[r.Name],
 				Rules:        rules,
 			}
 

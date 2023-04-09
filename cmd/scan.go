@@ -25,6 +25,18 @@ var (
 	upgradeMessage = ""
 )
 
+func WhereDoesResourceAppear(resources []handle_files.Resource) map[string][]string {
+	appearances := make(map[string][]string)
+
+	for _, resource := range resources {
+		if !utils.IsItemInSlice(utils.GetAbsPath(resource.Pos.Filename), appearances[resource.Name]) {
+			appearances[resource.Name] = append(appearances[resource.Name], utils.GetAbsPath(resource.Pos.Filename))
+		}
+	}
+
+	return appearances
+}
+
 func GetUniqResources(resources []handle_files.Resource) []handle_files.Resource {
 	var tempResourcesSlice []handle_files.Resource
 	tempResourcesMap := map[string]handle_files.Resource{}
@@ -49,13 +61,16 @@ var scanCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		var workspace workspace.Workspace
-		asJson := map[string][]rules_api.Rule{}
+		asJson := map[string]map[string]interface{}{}
 
 		if utils.IsInitialized(".") {
 			resources, err := handle_files.ScanFolderRecursively(".")
 			if err != nil {
 				_, _ = commons.RED.Println(err)
 			}
+
+			// find resource appearances
+			resourceAppearances := WhereDoesResourceAppear(resources)
 
 			err = state.Load("./.terrap.json", &workspace)
 			if err != nil {
@@ -68,7 +83,7 @@ var scanCmd = &cobra.Command{
 
 				if !cmd.Flag("annotate").Changed {
 					for _, resource := range GetUniqResources(resources) {
-						ruleset, err := resource.GetRuleset(rulebook)
+						ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
 						if err != nil {
 							_, _ = commons.RED.Println(err)
 							os.Exit(1)
@@ -77,7 +92,10 @@ var scanCmd = &cobra.Command{
 						// fill in json object
 						if cmd.Flag("json").Changed {
 							if ruleset.Rules != nil {
-								asJson[ruleset.ResourceName] = ruleset.Rules
+								asJson[ruleset.ResourceName] = map[string]interface{}{
+									"Rules":       ruleset.Rules,
+									"Appearances": resourceAppearances[resource.Name],
+								}
 							}
 
 							// print human-readable output
@@ -98,15 +116,17 @@ var scanCmd = &cobra.Command{
 					}
 
 					if !PRINTED {
-						upgradeMessage += fmt.Sprintf("  %s  %s: ",
-							emoji.UpArrow, strings.ReplaceAll(provider, "registry.terraform.io/", ""))
-						upgradeMessage += commons.GREEN.Sprintf("%s -> %s\n", version, rulebook.TargetVersion)
+						if rulebook.TargetVersion != "" {
+							upgradeMessage += fmt.Sprintf("  %s  %s: ",
+								emoji.UpArrow, strings.ReplaceAll(provider, "registry.terraform.io/", ""))
+							upgradeMessage += commons.GREEN.Sprintf("%s -> %s\n", version, rulebook.TargetVersion)
 
-						PRINTED = false // for next provider
+							PRINTED = false // for next provider
+						}
 					}
 				} else {
 					for _, resource := range resources {
-						ruleset, err := resource.GetRuleset(rulebook)
+						ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
 						if err != nil {
 							_, _ = commons.RED.Println(err)
 							os.Exit(1)
