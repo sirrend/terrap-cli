@@ -1,6 +1,8 @@
 package rules_api
 
 import (
+	"errors"
+	"github.com/Jeffail/gabs"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"net/http"
 	"net/url"
@@ -44,6 +46,11 @@ func GetRules(provider, sourceVersion string) (Rulebook, error) {
 		Bytes:         body,
 	}
 	rulebook.TargetVersion = rulebook.GetTargetVersion()
+
+	container, _ := gabs.ParseJSON(body)
+	if container.ExistsP("error") {
+		return rulebook, errors.New(utils.StripProviderPrefix(provider))
+	}
 
 	return rulebook, nil
 }

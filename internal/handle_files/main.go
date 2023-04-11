@@ -3,6 +3,7 @@ package handle_files
 import (
 	"errors"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
+	"github.com/sirrend/terrap-cli/internal/utils"
 	"os"
 	"path/filepath"
 )
@@ -106,7 +107,7 @@ func ScanFolderRecursively(dir string) (resources []Resource, err error) {
 			return err
 		}
 
-		if info.IsDir() && tfconfig.IsModuleDir(path) {
+		if info.IsDir() && tfconfig.IsModuleDir(path) && utils.IsHiddenFolder(path) {
 			if folderResources, err := ScanFolder(path); err == nil {
 				resources = append(resources, folderResources...)
 			} else {

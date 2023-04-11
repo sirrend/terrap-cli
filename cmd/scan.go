@@ -12,6 +12,7 @@ import (
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/handle_files"
 	"github.com/sirrend/terrap-cli/internal/rules_api"
+	"github.com/sirrend/terrap-cli/internal/scanning"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/sirrend/terrap-cli/internal/workspace"
@@ -21,38 +22,10 @@ import (
 )
 
 var (
-	PRINTED        = false
-	upgradeMessage = ""
+	PRINTED                = false
+	upgradeMessage         = ""
+	notYetSupportedMessage = ""
 )
-
-func WhereDoesResourceAppear(resources []handle_files.Resource) map[string][]string {
-	appearances := make(map[string][]string)
-
-	for _, resource := range resources {
-		if !utils.IsItemInSlice(utils.GetAbsPath(resource.Pos.Filename), appearances[resource.Name]) {
-			appearances[resource.Name] = append(appearances[resource.Name], utils.GetAbsPath(resource.Pos.Filename))
-		}
-	}
-
-	return appearances
-}
-
-func GetUniqResources(resources []handle_files.Resource) []handle_files.Resource {
-	var tempResourcesSlice []handle_files.Resource
-	tempResourcesMap := map[string]handle_files.Resource{}
-
-	for _, resource := range resources {
-		if _, inSlice := tempResourcesMap[resource.Name]; !inSlice {
-			tempResourcesMap[resource.Name] = resource
-		}
-	}
-
-	for _, resource := range tempResourcesMap {
-		tempResourcesSlice = append(tempResourcesSlice, resource)
-	}
-
-	return tempResourcesSlice
-}
 
 // scanCmd represents the scan command
 var scanCmd = &cobra.Command{
@@ -70,7 +43,7 @@ var scanCmd = &cobra.Command{
 			}
 
 			// find resource appearances
-			resourceAppearances := WhereDoesResourceAppear(resources)
+			resourceAppearances := scanning.WhereDoesResourceAppear(resources)
 
 			err = state.Load("./.terrap.json", &workspace)
 			if err != nil {
@@ -79,10 +52,21 @@ var scanCmd = &cobra.Command{
 
 			// go over every provider in user's folder
 			for provider, version := range workspace.Providers {
-				rulebook, _ := rules_api.GetRules(provider, version.String())
+				rulebook, err := rules_api.GetRules(provider, version.String())
+
+				// validate rulebook downloaded
+				if err != nil {
+					if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {
+						notYetSupportedMessage = strings.Join([]string{notYetSupportedMessage, err.Error()}, ", ")
+						continue
+					}
+
+					// TODO: add error here
+					continue
+				}
 
 				if !cmd.Flag("annotate").Changed {
-					for _, resource := range GetUniqResources(resources) {
+					for _, resource := range scanning.GetUniqResources(resources) {
 						ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
 						if err != nil {
 							_, _ = commons.RED.Println(err)
@@ -115,15 +99,17 @@ var scanCmd = &cobra.Command{
 						}
 					}
 
+					// check if upgrade is possible for the provider in context
 					if !PRINTED {
 						if rulebook.TargetVersion != "" {
-							upgradeMessage += fmt.Sprintf("  %s  %s: ",
-								emoji.UpArrow, strings.ReplaceAll(provider, "registry.terraform.io/", ""))
+							upgradeMessage += fmt.Sprintf("  %s %s: ",
+								emoji.UpArrow, utils.StripProviderPrefix(provider))
 							upgradeMessage += commons.GREEN.Sprintf("%s -> %s\n", version, rulebook.TargetVersion)
 
 							PRINTED = false // for next provider
 						}
 					}
+
 				} else {
 					for _, resource := range resources {
 						ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
@@ -138,10 +124,23 @@ var scanCmd = &cobra.Command{
 				}
 			}
 
-			if !cmd.Flag("no-safe-upgrade-message").Changed {
+			// print safe upgrade message
+			if !cmd.Flag("no-safe-upgrade-message").Changed && !cmd.Flag("no-messages").Changed {
 				if len(upgradeMessage) != 0 {
-					_, _ = commons.SIRREND.Println("You are safe to upgrade the following providers: ")
+					_, _ = commons.SIRREND.Println("The following providers are safe to upgrade: ")
 					fmt.Print(upgradeMessage)
+				}
+			}
+
+			// print not supported message
+			if !cmd.Flag("no-not-supported-message").Changed && !cmd.Flag("no-messages").Changed {
+				if notYetSupportedMessage != "" {
+					message := strings.TrimLeft(notYetSupportedMessage, ", ")
+					_, _ = commons.SIRREND.Println("\n========== This message can be suppressed using --no-not-supported-message ==========")
+					_, _ = commons.SIRREND.Print("The following providers are not yet supported: ")
+					fmt.Println(message, emoji.CryingFace.String())
+					_, _ = commons.HighMagenta.Print("Check again soon! ")
+					fmt.Println("we're actively working on increasing our Providers support " + emoji.BuildingConstruction.String())
 				}
 			}
 
@@ -159,4 +158,6 @@ func init() {
 	scanCmd.Flags().BoolP("json", "j", false, "Print scan output as json.")
 	scanCmd.Flags().BoolP("annotate", "a", false, "Annotate the code itself.")
 	scanCmd.Flags().BoolP("no-safe-upgrade-message", "n", false, "Don't print which providers are safe to upgrade")
+	scanCmd.Flags().Bool("no-not-supported-message", false, "Don't print if providers are not supported")
+	scanCmd.Flags().Bool("no-messages", false, "Don't print any message other than pure command output")
 }

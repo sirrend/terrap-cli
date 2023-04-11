@@ -5,20 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="000efb24-97c5-4cc8-906f-1b9373634141" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/terraform-test/module/test-module/m.tf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/terraform-test/module/test-module/vars.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/community_modules/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/github_issue/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/github_issue/rate_limit_error.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/providers_api/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/scanning/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/init.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/scan.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/scan.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/whats_new.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/whats_new.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/commons/commons.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/commons/commons.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/handle_files/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handle_files/resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/resource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handle_files/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/rules_api/rule.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/rule.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/rules_api/ruleset.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/ruleset.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/terraform_utils/terraform_utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/terraform_utils/terraform_utils.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/rules_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/utils/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/utils/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/.terrap.json" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/.terrap.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/.terrap.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/init.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/init.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/module/test-module/m.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-backend-modules-test/test-module/m.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/module/test-module/vars.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-backend-modules-test/test-module/vars.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/terraform-test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/test.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,13 +70,14 @@
     &quot;configurable.GoLibrariesConfigurable.is.expanded&quot;: &quot;true&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/yuvalpress/Desktop/Sirrend/terrap-cli/internal/rules_api&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/yuvalpress/Desktop/Sirrend/terrap-cli/terraform-backend-modules-test&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/terraform-backend-modules-test" />
       <recent name="$PROJECT_DIR$/internal/rules_api" />
       <recent name="$PROJECT_DIR$/internal" />
       <recent name="$PROJECT_DIR$/cmd" />

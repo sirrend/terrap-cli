@@ -287,3 +287,38 @@ func IsItemInSlice(item string, items []string) bool {
 
 	return false
 }
+
+// StripProviderPrefix
+/*
+@brief:
+	StripProviderPrefix cleans the provider name from its registry prefix
+@params:
+	provider - string - the provider to strip
+@returns:
+	string - the stripped provide
+*/
+func StripProviderPrefix(provider string) string {
+	return strings.ReplaceAll(provider, "registry.terraform.io/", "")
+}
+
+// IsHiddenFolder
+/*
+@brief:
+	IsHiddenFolder checks if a given folder is hidden
+@params:
+	path - string - the dir to check
+@returns:
+	bool - true if hidden, otherwise false
+*/
+func IsHiddenFolder(path string) bool {
+	pathLength := len(path)
+	if pathLength > 1 {
+		if path[0] == '.' && path[1] != '.' {
+			return true
+		}
+	} else if pathLength == 1 && path[0] == '.' {
+		return true
+	}
+
+	return false
+}

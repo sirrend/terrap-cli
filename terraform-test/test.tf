@@ -3,9 +3,8 @@ output "output" {
 }
 
 module "test" {
-  source = "module/test-module"
-
-  name = "test"
+  source = "../terraform-backend-modules-test/test-module/"
+  name   = "testing"
 }
 
 resource "aws_s3_bucket" "b" {
@@ -71,3 +70,14 @@ resource "aws_s3_bucket_website_configuration" "test" {
 }
 
 
+module "module_example_complete" {
+  source  = "cloudposse/module/example//examples/complete"
+  version = "1.0.0"
+  # insert the 15 required variables here
+}
+
+resource "google_runtimeconfig_config_iam_binding" "test" {
+  config  = ""
+  members = []
+  role    = ""
+}

@@ -90,16 +90,13 @@ func deleteInitData(dir string) {
 	if err != nil {
 		_, _ = commons.GREEN.Println(" Nothing to do.")
 		_, _ = commons.YELLOW.Println("The given directory is not initialized.")
-		os.Exit(1)
+		os.Exit(0)
 	}
 
-	err = os.RemoveAll(path.Join(dir, ".terraform"))
-	if err != nil {
-		fmt.Println(err)
-		_, _ = commons.GREEN.Println(" Nothing to do.")
-		_, _ = commons.YELLOW.Println("The given directory is not initialized.")
-		os.Exit(1)
-	}
+	// delete Terraform files if exist
+	_ = os.Remove(path.Join(dir, ".terraform.lock.hcl"))
+	_ = os.RemoveAll(path.Join(dir, ".terraform"))
+
 	_, _ = commons.GREEN.Println(" Done!")
 }
 
