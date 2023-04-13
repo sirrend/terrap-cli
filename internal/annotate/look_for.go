@@ -3,13 +3,13 @@ package annotate
 import (
 	"bufio"
 	"fmt"
-	"github.com/sirrend/terrap-cli/internal/handle_files"
+	"github.com/sirrend/terrap-cli/internal/files_handler"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"os"
 	"strings"
 )
 
-func FindAttributeInResourceDeclaration(resource handle_files.Resource, path string) int {
+func FindAttributeInResourceDeclaration(resource files_handler.Resource, path string) int {
 	var lines []string
 
 	// Open the file for reading

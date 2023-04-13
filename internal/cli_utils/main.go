@@ -1,14 +1,26 @@
-package cli_commons
+package cli_utils
 
 import (
+	"github.com/common-nighthawk/go-figure"
 	"github.com/enescakir/emoji"
 	"github.com/hashicorp/go-version"
+	"github.com/olekukonko/tablewriter"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
 	"os"
 	"strings"
 )
+
+// SirrendLogoPrint
+/*
+@brief:
+	SirrendLogoPrint prints the Sirrend logo
+*/
+func SirrendLogoPrint() {
+	myFigure := figure.NewColorFigure("Sirrend", "", "purple", true)
+	myFigure.Print()
+}
 
 // flagsToAPIRepresentation
 /*
@@ -103,4 +115,41 @@ func GetFixedProvidersFlag(cmd cobra.Command) workspace.Workspace {
 	}
 
 	return ws
+}
+
+// GetTable
+/*
+@brief:
+	GetTable returns a new initialized table
+@params:
+	headers - []string - the list of headers to append to the new table
+@returns:
+	*tablewriter.Table - the new table
+*/
+func GetTable(headers []string) *tablewriter.Table {
+	var headerColors []tablewriter.Colors
+	columnAlignment := []int{0}
+	columnColors := []tablewriter.Colors{{tablewriter.Bold, tablewriter.FgGreenColor}}
+
+	table := tablewriter.NewWriter(os.Stdout) // init table
+	table.SetHeader(headers)                  // add headers
+
+	// set colors
+	for i := 0; i < len(headers); i++ {
+		headerColors = append(headerColors, tablewriter.Colors{tablewriter.Bold, tablewriter.BgMagentaColor})
+		columnColors = append(columnColors, tablewriter.Colors{tablewriter.Bold, tablewriter.FgYellowColor})
+	}
+
+	columnColors = columnColors[:len(columnColors)-1] // trim last element as the first one is set before the iteration
+
+	table.SetHeaderColor(headerColors...)
+	table.SetColumnColor(columnColors...)
+
+	// set alignment
+	for i := 0; i < len(headers)-1; i++ {
+		columnAlignment = append(columnAlignment, 1)
+	}
+	table.SetColumnAlignment(columnAlignment)
+
+	return table
 }

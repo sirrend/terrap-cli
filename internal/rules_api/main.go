@@ -3,6 +3,7 @@ package rules_api
 import (
 	"errors"
 	"github.com/Jeffail/gabs"
+	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"net/http"
 	"net/url"
@@ -21,7 +22,7 @@ import (
 */
 func GetRules(provider, sourceVersion string) (Rulebook, error) {
 	// make the request
-	u, _ := url.Parse("https://ry75faho5jdjuwcwplf4hkyupi0sszxg.lambda-url.eu-west-1.on.aws")
+	u, _ := url.Parse(commons.API)
 	query := u.Query()
 	query.Set("provider", provider)
 	query.Set("source_version", sourceVersion)

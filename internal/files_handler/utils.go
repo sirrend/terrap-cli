@@ -1,4 +1,4 @@
-package handle_files
+package files_handler
 
 import (
 	"github.com/hashicorp/hcl/v2"
@@ -92,10 +92,10 @@ func analyzeResources(resources map[string]*tfconfig.Resource) ([]Resource, erro
 	return analyzedResources, nil
 }
 
-// GetLocalModuleResources
+// getLocalModuleResources
 /*
 @brief:
-	GetLocalModuleResources returns local module's resources
+	getLocalModuleResources returns local module's resources
 @params:
 	dir - string - the folder to look in
 	module - tfconfig.ModuleCall - the module
@@ -103,7 +103,7 @@ func analyzeResources(resources map[string]*tfconfig.Resource) ([]Resource, erro
 	resources - []*Resource - map of all resources found in the given folder and its attributes'
 	error - if exists, else nil
 */
-func GetLocalModuleResources(dir string, module tfconfig.ModuleCall) ([]Resource, error) {
+func getLocalModuleResources(dir string, module tfconfig.ModuleCall) ([]Resource, error) {
 	abs := utils.GetAbsPath(filepath.Join(dir, module.Source))
 	if utils.DoesExist(abs) {
 		tempModuleResources, err := ScanFolder(abs)
@@ -115,4 +115,21 @@ func GetLocalModuleResources(dir string, module tfconfig.ModuleCall) ([]Resource
 	}
 
 	return nil, nil
+}
+
+// isTerraformFile
+/*
+@brief:
+	isTerraformFile checks if a path represents a terraform file
+@params:
+	path - string - the path to check
+@returns:
+	bool - true if tf, otherwise false
+*/
+func isTerraformFile(path string) bool {
+	if filepath.Ext(path) == ".tf" {
+		return true
+	}
+
+	return false
 }

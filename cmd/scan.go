@@ -9,9 +9,9 @@ import (
 	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
 	"github.com/sirrend/terrap-cli/internal/annotate"
-	"github.com/sirrend/terrap-cli/internal/cli_commons"
+	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/sirrend/terrap-cli/internal/handle_files"
+	"github.com/sirrend/terrap-cli/internal/files_handler"
 	"github.com/sirrend/terrap-cli/internal/rules_api"
 	"github.com/sirrend/terrap-cli/internal/scanning"
 	"github.com/sirrend/terrap-cli/internal/state"
@@ -28,6 +28,11 @@ var (
 	notYetSupportedMessage = ""
 )
 
+type appliedRules struct {
+	ruleSet rules_api.RuleSet
+	rules   []rules_api.Rule
+}
+
 // scanCmd represents the scan command
 var scanCmd = &cobra.Command{
 	Use:   "scan",
@@ -35,28 +40,27 @@ var scanCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		var workspace workspace.Workspace
-		asJson := map[string]map[string]interface{}{}
+		var asText []appliedRules
+		asJson := map[string][]rules_api.Rule{}
 
 		providersSet := cmd.Flag("fixed-providers").Changed
 		if utils.IsInitialized(".") || providersSet {
-			resources, err := handle_files.ScanFolderRecursively(".")
+			files, err := files_handler.FindResourcesPerFile(".")
 			if err != nil {
 				_, _ = commons.RED.Println(err)
 			}
 
-			// find resource appearances
-			resourceAppearances := scanning.WhereDoesResourceAppear(resources)
-
+			// gather providers
 			if !providersSet {
 				err = state.Load("./.terrap.json", &workspace)
 				if err != nil {
 					_, _ = commons.RED.Println(err)
 				}
 			} else {
-				workspace = cli_commons.GetFixedProvidersFlag(*cmd)
+				workspace = cli_utils.GetFixedProvidersFlag(*cmd)
 			}
 
-			// go over every provider in user's folder
+			// go over every provider in user's folder / user's declaration
 			for provider, version := range workspace.Providers {
 				rulebook, err := rules_api.GetRules(provider, version.String())
 
@@ -67,47 +71,77 @@ var scanCmd = &cobra.Command{
 						continue
 					}
 
-					// TODO: add error here
 					continue
 				}
 
-				flags := cli_commons.ChangedComponentsFlags(*cmd)
+				flags := cli_utils.ChangedComponentsFlags(*cmd)
 				if !cmd.Flag("annotate").Changed {
-					for _, resource := range scanning.GetUniqResources(resources) {
-						if utils.IsItemInSlice(resource.Type, flags) {
+					for file, fileResources := range files {
+						if len(fileResources) == 0 {
+							continue
+						}
 
-							ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
-							if err != nil {
-								_, _ = commons.RED.Println(err)
-								os.Exit(1)
-							}
+						for _, resource := range scanning.GetUniqResources(fileResources) {
+							if utils.IsItemInSlice(resource.Type, flags) {
+								ruleset, err := resource.GetRuleset(rulebook, nil)
+								if err != nil {
+									_, _ = commons.RED.Println(err)
+									os.Exit(1)
+								}
 
-							// fill in json object
-							if cmd.Flag("json").Changed {
-								if ruleset.Rules != nil {
-									asJson[ruleset.ResourceName] = map[string]interface{}{
-										"Rules":       ruleset.Rules,
-										"Appearances": resourceAppearances[resource.Name],
+								// fill json object with applied rules
+								if cmd.Flag("json").Changed {
+									if ruleset.Rules != nil {
+										for _, rule := range ruleset.Rules {
+											if apply, err := rule.DoesRuleApplyInContext(file, resource.Name, resource.Type); err == nil && apply {
+												asJson[ruleset.ResourceName] = append(asJson[ruleset.ResourceName], rule)
+												PRINTED = true
+											}
+										}
+									}
+
+									// combine ruleSets with applied rules
+								} else {
+									if ruleset.Rules != nil {
+										var rules []rules_api.Rule
+										for _, rule := range ruleset.Rules {
+											if apply, err := rule.DoesRuleApplyInContext(file, resource.Name, resource.Type); err == nil && apply {
+												rules = append(rules, rule)
+												PRINTED = true
+											}
+										}
+
+										asText = append(asText, appliedRules{
+											ruleSet: ruleset,
+											rules:   rules,
+										})
 									}
 								}
-
-								// print human-readable output
 							} else {
-								ruleset.PrettyPrint()
-								if len(ruleset.Rules) != 0 {
-									PRINTED = true
+								PRINTED = true // to avoid wrong possible upgrade message
+							}
+						}
+
+						// print json object
+						if cmd.Flag("json").Changed {
+							if len(asJson) != 0 {
+								utils.PrettyPrintStruct(map[string]interface{}{file: asJson})
+							}
+
+							asJson = map[string][]rules_api.Rule{} // reset for next provider
+
+						} else {
+							if len(asText) > 0 {
+								_, _ = commons.SIRREND.Println("File:", utils.GetAbsPath(file))
+							}
+
+							for _, appliedRules := range asText {
+								if len(appliedRules.rules) > 0 {
+									appliedRules.ruleSet.PrettyPrint(appliedRules.rules)
 								}
 							}
-						} else {
-							PRINTED = true // to avoid wrong possible upgrade message
-						}
-					}
 
-					// print json object
-					if cmd.Flag("json").Changed {
-						utils.PrettyPrintStruct(asJson)
-						if len(asJson) != 0 {
-							PRINTED = true
+							asText = []appliedRules{} // clean up for next iteration
 						}
 					}
 
@@ -123,15 +157,16 @@ var scanCmd = &cobra.Command{
 					}
 
 				} else {
-					for _, resource := range resources {
-						ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
-						if err != nil {
-							_, _ = commons.RED.Println(err)
-							os.Exit(1)
+					for _, fileResources := range files {
+						for _, resource := range fileResources {
+							ruleset, err := resource.GetRuleset(rulebook, nil)
+							if err != nil {
+								_, _ = commons.RED.Println(err)
+								os.Exit(1)
+							}
+
+							annotate.AddAnnotationByRuleSet(resource, ruleset)
 						}
-
-						annotate.AddAnnotationByRuleSet(resource, ruleset)
-
 					}
 				}
 			}
@@ -148,7 +183,6 @@ var scanCmd = &cobra.Command{
 			if !cmd.Flag("no-not-supported-message").Changed && !cmd.Flag("no-messages").Changed {
 				if notYetSupportedMessage != "" {
 					message := strings.TrimLeft(notYetSupportedMessage, ", ")
-					_, _ = commons.SIRREND.Println("========== This message can be suppressed using --no-not-supported-message ==========")
 					_, _ = commons.SIRREND.Print("The following providers are not yet supported: ")
 					fmt.Println(message, emoji.CryingFace.String())
 					_, _ = commons.HighMagenta.Print("Check again soon! ")

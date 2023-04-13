@@ -12,6 +12,8 @@ import (
 	"github.com/hashicorp/terraform-exec/tfexec"
 	ver "github.com/hashicorp/terraform/version"
 	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/workspace"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -108,6 +110,30 @@ func InstallTf() (execPath string, tv string) {
 	}
 }
 
+// FindTfProviders
+/*
+@brief: FindTfProviders
+	finds the Terraform providers in the given folder
+@params:
+	dir - the folder to find the Terraform providers in
+@returns:
+	the Terraform providers in the given folder
+*/
+func FindTfProviders(dir string, main *workspace.Workspace) map[string]*version.Version {
+	tf := NewTerraformExecutor(dir, (*main).ExecPath)
+
+	_, providersList, err := tf.Version(context.Background(), true)
+
+	if err != nil {
+		log.Fatalf("error getting terraform providers: %s", err)
+	}
+
+	(*main).Providers = providersList
+
+	return providersList
+}
+
+// NewTerraformExecutor
 /*
 @brief: NewTerraformExecutor creates a new terraform executor
 @
@@ -115,8 +141,7 @@ func InstallTf() (execPath string, tv string) {
 @        execPath - the path to the Terraform executable
 @returns: *tfexec.Terraform - the terraform executor
 */
-
-func NewTerraformExecuter(dir string, execPath string) *tfexec.Terraform {
+func NewTerraformExecutor(dir string, execPath string) *tfexec.Terraform {
 	dir, _ = filepath.Abs(dir)
 	tf, err := tfexec.NewTerraform(dir, execPath)
 	if err != nil {
@@ -137,7 +162,7 @@ func NewTerraformExecuter(dir string, execPath string) *tfexec.Terraform {
 func TerraformInit(dir string) (string, string, error) {
 	execPath, terraformToolVersion := InstallTf()
 
-	tf := NewTerraformExecuter(dir, execPath)
+	tf := NewTerraformExecutor(dir, execPath)
 
 	// initialize terraform in the given folder
 	err := tf.Init(context.Background(), tfexec.Upgrade(true))

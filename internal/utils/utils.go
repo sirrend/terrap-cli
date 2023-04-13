@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/olekukonko/tablewriter"
+	"github.com/tidwall/pretty"
 	"io"
 	"io/ioutil"
 	"log"
@@ -302,61 +302,72 @@ func StripProviderPrefix(provider string) string {
 	return strings.ReplaceAll(provider, "registry.terraform.io/", "")
 }
 
-// IsHiddenFolder
+// IsHiddenObject
 /*
 @brief:
-	IsHiddenFolder checks if a given folder is hidden
+	IsHiddenObject checks if a given folder / file is hidden
 @params:
-	path - string - the dir to check
+	path - string - the path to check
 @returns:
 	bool - true if hidden, otherwise false
 */
-func IsHiddenFolder(path string) bool {
-	pathLength := len(path)
-	if pathLength > 1 {
-		if path[0] == '.' && path[1] != '.' {
-			return true
-		}
-	} else if pathLength == 1 && path[0] == '.' {
+func IsHiddenObject(path string) bool {
+	path = GetFileName(path)
+	if strings.HasPrefix(path, ".") {
 		return true
 	}
 
 	return false
 }
 
-// GetTable
+// IsHiddenPath
 /*
 @brief:
-	GetTable returns a new initialized table
+	IsHiddenPath checks if a given path is hidden
 @params:
-	headers - []string - the list of headers to append to the new table
+	path - string - the path to check
 @returns:
-	*tablewriter.Table - the new table
+	bool - true if hidden, otherwise false
 */
-func GetTable(headers []string) *tablewriter.Table {
-	var headerColors []tablewriter.Colors
-	columnAlignment := []int{0}
-	columnColors := []tablewriter.Colors{{tablewriter.Bold, tablewriter.FgGreenColor}}
-
-	table := tablewriter.NewWriter(os.Stdout) // init table
-	table.SetHeader(headers)                  // add headers
-
-	// set colors
-	for i := 0; i < len(headers); i++ {
-		headerColors = append(headerColors, tablewriter.Colors{tablewriter.Bold, tablewriter.BgMagentaColor})
-		columnColors = append(columnColors, tablewriter.Colors{tablewriter.Bold, tablewriter.FgYellowColor})
+func IsHiddenPath(path string) bool {
+	if strings.HasPrefix(path, ".") {
+		return true
 	}
 
-	columnColors = columnColors[:len(columnColors)-1] // trim last element as the first one is set before the iteration
+	return false
+}
 
-	table.SetHeaderColor(headerColors...)
-	table.SetColumnColor(columnColors...)
+// GetFileName
+/*
+@brief:
+	GetFileName returns a file name out of a given path
+@params:
+	path - string - the path to get the file name from
+@returns:
+	string - the file name
+*/
+func GetFileName(path string) string {
+	return filepath.Base(path)
+}
 
-	// set alignment
-	for i := 0; i < len(headers)-1; i++ {
-		columnAlignment = append(columnAlignment, 1)
-	}
-	table.SetColumnAlignment(columnAlignment)
+func ColorizedPrettyPrint(data any) {
+	// marshal the struct to JSON
+	dataAsBytes, _ := json.MarshalIndent(data, "", "  ")
 
-	return table
+	// colorize the JSON
+	colored := pretty.Color(dataAsBytes, nil)
+	fmt.Println(string(colored))
+}
+
+// GetDirName
+/*
+@brief:
+	GetDirName returns a file dir out of a given path
+@params:
+	path - string - the path to get the dir path from
+@returns:
+	string - the dir path
+*/
+func GetDirName(path string) string {
+	return filepath.Dir(path)
 }

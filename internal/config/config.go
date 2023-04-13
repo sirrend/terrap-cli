@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/fatih/color"
-	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"log"
@@ -27,20 +26,6 @@ var c config
 func PrintNotConfiguredMessage() {
 	yellow := color.New(color.FgYellow)
 	_, _ = yellow.Println("Hmm..seems like you didn't configure Terrap yet\nPlease execute < terrap config >.")
-}
-
-/*
-@brief: IsConfigured Checks if the tool has been configured
-@
-@returns: bool - true if configured, false otherwise
-*/
-
-func IsConfigured() bool {
-	if utils.DoesExist(commons.TerrapConfigFile) {
-		return true
-	}
-
-	return false
 }
 
 /*

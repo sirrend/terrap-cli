@@ -36,19 +36,14 @@ func (r RuleSet) GetNewComponents() []string {
 @brief:
 	PrettyPrint prints the RuleSet object
 */
-func (r RuleSet) PrettyPrint() {
+func (r RuleSet) PrettyPrint(rules []Rule) {
 	if r.Rules != nil {
 		_, _ = commons.GREEN.Print("Resource Name: ")
 		fmt.Println(r.ResourceName)
 		fmt.Println("  Changes:")
 
-		for _, rule := range r.Rules {
+		for _, rule := range rules {
 			rule.PrettyPrint()
-		}
-
-		fmt.Println("  Appearances:")
-		for _, appear := range r.Appearances {
-			_, _ = commons.YELLOW.Println("    " + appear)
 		}
 
 		fmt.Println()

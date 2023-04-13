@@ -5,23 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="000efb24-97c5-4cc8-906f-1b9373634141" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/cli_commons/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/openIssue.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/open_issue.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/init.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/providers.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/providers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/scan.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/scan.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/whats_new.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/whats_new.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handle_files/resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/resource.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/providers_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/providers_api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/annotate/look_for.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/annotate/look_for.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/annotate/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/annotate/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/cli_commons/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cli_utils/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/commons/commons.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/commons/commons.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/community_modules/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/community_modules/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_files/attribute.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/files_handler/attribute.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_files/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/files_handler/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_files/resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/files_handler/resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_files/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/files_handler/utils.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/providers/providers.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/providers/providers_test.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/rules_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/rules_api/rule.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/rule.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/rules_api/rulebook.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/rulebook.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/state/state.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/state/state.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/rules_api/ruleset.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/ruleset.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/scanning/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/scanning/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/terraform_utils/terraform_utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/terraform_utils/terraform_utils.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/utils/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/utils/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/.terrap.json" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/.terrap.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/init.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/init.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/terraform-test/module/test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/module/test/test.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/test.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

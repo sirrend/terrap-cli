@@ -8,8 +8,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/enescakir/emoji"
+	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/sirrend/terrap-cli/internal/providers"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/terraform_utils"
 	"github.com/sirrend/terrap-cli/internal/utils"
@@ -18,21 +18,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/common-nighthawk/go-figure"
 	"github.com/spf13/cobra"
 )
 
-func sirrendLogoPrint() {
-	myFigure := figure.NewColorFigure("Sirrend", "", "purple", true)
-	myFigure.Print()
-}
-
+// terraformInit
 /*
-@brief: terraformInit performs the Terraform init command on the given folder
-@
-@params: dir - the folder to initialize
+@brief:
+	terraformInit performs the Terraform init command on the given folder
+@params:
+	dir - the folder to initialize
 */
-
 func terraformInit(dir string) {
 	_, err := os.Stat(path.Join(dir, ".terrap.json"))
 
@@ -54,7 +49,7 @@ func terraformInit(dir string) {
 		}
 
 		_, _ = commons.YELLOW.Print(emoji.Toolbox, " Looking for providers...")
-		providers.FindTfProviders(dir, &mainWorkspace) //find all providers and assign to mainWorkspace
+		terraform_utils.FindTfProviders(dir, &mainWorkspace) //find all providers and assign to mainWorkspace
 		_, _ = commons.GREEN.Println(" Done!")
 
 		_, _ = commons.YELLOW.Print(emoji.WavingHand, " Saving workspace...")
@@ -154,7 +149,7 @@ var initCmd = &cobra.Command{
 
 		} else if cmd.Flag("directory").Changed {
 			if utils.IsDir(cmd.Flag("directory").Value.String()) {
-				sirrendLogoPrint()
+				cli_utils.SirrendLogoPrint()
 				fmt.Println()
 
 				d, _ := filepath.Abs(cmd.Flag("directory").Value.String())
@@ -168,7 +163,7 @@ var initCmd = &cobra.Command{
 			}
 
 		} else if cmd.Flag("current-directory").Changed {
-			sirrendLogoPrint()
+			cli_utils.SirrendLogoPrint()
 			fmt.Println()
 
 			location, err := os.Getwd() // get current directory

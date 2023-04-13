@@ -1,4 +1,4 @@
-package handle_files
+package files_handler
 
 import (
 	"github.com/hashicorp/hcl/v2/hclwrite"

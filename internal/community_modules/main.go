@@ -60,7 +60,7 @@ func (m *Module) Init(dir string, module tfconfig.ModuleCall) error {
 //
 //	providers.FindTfProviders(m.DotTerraformLocation, &tempWorkspace)
 //
-//	resources, err := handle_files.ScanFolderRecursively(".")
+//	resources, err := files_handler.ScanFolderRecursively(".")
 //	if err != nil {
 //		_, _ = commons.RED.Println(err)
 //	}

@@ -1,11 +1,11 @@
 package scanning
 
 import (
-	"github.com/sirrend/terrap-cli/internal/handle_files"
+	"github.com/sirrend/terrap-cli/internal/files_handler"
 	"github.com/sirrend/terrap-cli/internal/utils"
 )
 
-func WhereDoesResourceAppear(resources []handle_files.Resource) map[string][]string {
+func WhereDoesResourceAppear(resources []files_handler.Resource) map[string][]string {
 	appearances := make(map[string][]string)
 
 	for _, resource := range resources {
@@ -17,9 +17,9 @@ func WhereDoesResourceAppear(resources []handle_files.Resource) map[string][]str
 	return appearances
 }
 
-func GetUniqResources(resources []handle_files.Resource) []handle_files.Resource {
-	var tempResourcesSlice []handle_files.Resource
-	tempResourcesMap := map[string]handle_files.Resource{}
+func GetUniqResources(resources []files_handler.Resource) []files_handler.Resource {
+	var tempResourcesSlice []files_handler.Resource
+	tempResourcesMap := map[string]files_handler.Resource{}
 
 	for _, resource := range resources {
 		if _, inSlice := tempResourcesMap[resource.Name]; !inSlice {
