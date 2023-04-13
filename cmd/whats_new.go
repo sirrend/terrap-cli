@@ -122,5 +122,5 @@ func init() {
 
 	// extra output flags
 	whatsNewCmd.Flags().Bool("no-not-supported-message", false, "Don't print if providers are not supported.")
-	whatsNewCmd.Flags().Bool("no-messages", false, "Don't print any message other than pure command output.")
+	whatsNewCmd.Flags().BoolP("no-messages", "n", false, "Don't print any message other than pure command output.")
 }

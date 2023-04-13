@@ -185,8 +185,8 @@ var scanCmd = &cobra.Command{
 					message := strings.TrimLeft(notYetSupportedMessage, ", ")
 					_, _ = commons.SIRREND.Print("The following providers are not yet supported: ")
 					fmt.Println(message, emoji.CryingFace.String())
-					_, _ = commons.HighMagenta.Print("Check again soon! ")
-					fmt.Println("we're actively working on increasing our Providers support " + emoji.BuildingConstruction.String())
+					_, _ = commons.SIRREND.Print("Check again soon! ")
+					fmt.Println("We're actively working on increasing our Providers support " + emoji.BuildingConstruction.String())
 				}
 			}
 
