@@ -91,7 +91,7 @@ func GetFixedProvidersFlag(cmd cobra.Command) workspace.Workspace {
 	for _, p := range fp {
 		if strings.Contains(p, ":") {
 			providerValue := strings.Split(p, ":")
-			if len(providerValue) >= 1 {
+			if len(providerValue) > 1 {
 				v, err := version.NewVersion(providerValue[1])
 				if err != nil {
 					if providerValue[1] != "" {

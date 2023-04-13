@@ -118,7 +118,7 @@ func init() {
 	whatsNewCmd.Flags().BoolP("provider", "p", false, "Show only provider changes.")
 	whatsNewCmd.Flags().BoolP("data-sources", "d", false, "Show only data source changes.")
 	whatsNewCmd.Flags().BoolP("resources", "r", false, "Show only resources changes.")
-	whatsNewCmd.Flags().StringSlice("fixed-providers", []string{}, "A space separated list of fixed providers written in the following format: `<provider>:<version>`.If this flag is used, all other in-context providers are ignored.")
+	whatsNewCmd.Flags().StringSlice("fixed-providers", []string{}, "A comma separated list of fixed providers written in the following format: `<provider>:<version>`.If this flag is used, all other in-context providers are ignored.")
 
 	// extra output flags
 	whatsNewCmd.Flags().Bool("no-not-supported-message", false, "Don't print if providers are not supported.")

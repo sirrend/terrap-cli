@@ -64,7 +64,6 @@ var scanCmd = &cobra.Command{
 			// go over every provider in user's folder / user's declaration
 			for provider, version := range workspace.Providers {
 				rulebook, err := rules_api.GetRules(provider, version.String())
-
 				// validate rulebook downloaded
 				if err != nil {
 					if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {
@@ -174,7 +173,7 @@ var scanCmd = &cobra.Command{
 
 			// print safe upgrade message
 			if !cmd.Flag("no-safe-upgrade-message").Changed && !cmd.Flag("no-messages").Changed {
-				if len(upgradeMessage) != 0 {
+				if upgradeMessage != "" {
 					_, _ = commons.SIRREND.Println("The following providers are safe to upgrade: ")
 					fmt.Println(upgradeMessage)
 				}
@@ -207,7 +206,7 @@ func init() {
 	scanCmd.Flags().BoolP("provider", "p", false, "Show only provider changes.")
 	scanCmd.Flags().BoolP("data-sources", "d", false, "Show only data source changes.")
 	scanCmd.Flags().BoolP("resources", "r", false, "Show only resources changes.")
-	scanCmd.Flags().StringSlice("fixed-providers", []string{}, "A space separated list of fixed providers written in the following format: `<provider>:<version>`.If this flag is used, all other in-context providers are ignored.")
+	scanCmd.Flags().StringSlice("fixed-providers", []string{}, "A comma separated list of fixed providers written in the following format: `<provider>:<version>`.If this flag is used, all other in-context providers are ignored.")
 
 	// extra output flags
 	scanCmd.Flags().Bool("no-safe-upgrade-message", false, "Don't print which providers are safe to upgrade.")

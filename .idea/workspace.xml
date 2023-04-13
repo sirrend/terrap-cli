@@ -8,6 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/scan.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/scan.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/whats_new.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/whats_new.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/cli_utils/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/cli_utils/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
