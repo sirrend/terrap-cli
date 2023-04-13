@@ -11,6 +11,7 @@ import (
 
 var lock sync.Mutex
 
+// Save
 /*
 @brief: Save saves a representation of v to the file at path.
 @
@@ -19,7 +20,6 @@ var lock sync.Mutex
 @
 @returns: error - the error if any
 */
-
 func Save(path string, v interface{}) error {
 	lock.Lock()
 	defer lock.Unlock()
@@ -47,6 +47,7 @@ func Save(path string, v interface{}) error {
 	return err
 }
 
+// Load
 /*
 @brief: Load loads the file at path into v.
 @		Use os.IsNotExist() to see if the returned error is due
@@ -57,7 +58,6 @@ func Save(path string, v interface{}) error {
 @
 @returns: error - the error if any
 */
-
 func Load(path string, v *workspace.Workspace) error {
 	lock.Lock()
 	defer lock.Unlock()

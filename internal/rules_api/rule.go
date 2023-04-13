@@ -48,8 +48,10 @@ func (r Rule) PrettyPrint() {
 	_, _ = commons.YELLOW.Print("    Change: ")
 	fmt.Println(r.Notification)
 
-	_, _ = commons.YELLOW.Print("    Documentation: ")
-	fmt.Println(r.URL, "\n")
+	if r.URL != "" {
+		_, _ = commons.YELLOW.Print("    Documentation: ")
+		fmt.Println(r.URL, "\n")
+	}
 }
 
 // PrettyPrintWhatsNew
@@ -62,8 +64,10 @@ func (r Rule) PrettyPrintWhatsNew() {
 		_, _ = commons.YELLOW.Print("    Addition: ")
 		fmt.Println(r.Notification)
 
-		_, _ = commons.YELLOW.Print("    Documentation: ")
-		fmt.Println(r.URL, "\n")
+		if r.URL != "" {
+			_, _ = commons.YELLOW.Print("    Documentation: ")
+			fmt.Println(r.URL, "\n")
+		}
 	}
 }
 

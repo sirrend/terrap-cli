@@ -5,25 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="000efb24-97c5-4cc8-906f-1b9373634141" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/community_modules/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/github_issue/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/github_issue/rate_limit_error.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/providers_api/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/internal/scanning/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/cli_commons/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/openIssue.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/open_issue.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/providers.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/providers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/scan.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/scan.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/whats_new.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/whats_new.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/commons/commons.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/commons/commons.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handle_files/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handle_files/resource.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handle_files/resource.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/providers_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/providers_api/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/rules_api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/rules_api/rule.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/rule.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/rules_api/rulebook.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/rules_api/rulebook.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/state/state.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/state/state.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/utils/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/utils/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/.terrap.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/init.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/init.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/module/test-module/m.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-backend-modules-test/test-module/m.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/module/test-module/vars.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-backend-modules-test/test-module/vars.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform-test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/test.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/.terrap.json" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/.terrap.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform-test/module/test/test.tf" beforeDir="false" afterPath="$PROJECT_DIR$/terraform-test/module/test/test.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +70,7 @@
     &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/yuvalpress/Desktop/Sirrend/terrap-cli/terraform-backend-modules-test&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;go.vgo&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -86,6 +84,25 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/internal" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="terrap-cli" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="terrap-cli" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">

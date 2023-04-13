@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fatih/color"
+	"github.com/olekukonko/tablewriter"
 	"io"
 	"io/ioutil"
 	"log"
@@ -321,4 +322,41 @@ func IsHiddenFolder(path string) bool {
 	}
 
 	return false
+}
+
+// GetTable
+/*
+@brief:
+	GetTable returns a new initialized table
+@params:
+	headers - []string - the list of headers to append to the new table
+@returns:
+	*tablewriter.Table - the new table
+*/
+func GetTable(headers []string) *tablewriter.Table {
+	var headerColors []tablewriter.Colors
+	columnAlignment := []int{0}
+	columnColors := []tablewriter.Colors{{tablewriter.Bold, tablewriter.FgGreenColor}}
+
+	table := tablewriter.NewWriter(os.Stdout) // init table
+	table.SetHeader(headers)                  // add headers
+
+	// set colors
+	for i := 0; i < len(headers); i++ {
+		headerColors = append(headerColors, tablewriter.Colors{tablewriter.Bold, tablewriter.BgMagentaColor})
+		columnColors = append(columnColors, tablewriter.Colors{tablewriter.Bold, tablewriter.FgYellowColor})
+	}
+
+	columnColors = columnColors[:len(columnColors)-1] // trim last element as the first one is set before the iteration
+
+	table.SetHeaderColor(headerColors...)
+	table.SetColumnColor(columnColors...)
+
+	// set alignment
+	for i := 0; i < len(headers)-1; i++ {
+		columnAlignment = append(columnAlignment, 1)
+	}
+	table.SetColumnAlignment(columnAlignment)
+
+	return table
 }

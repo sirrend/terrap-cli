@@ -7,6 +7,13 @@ import (
 	"net/http"
 )
 
+// Provider represents a provider fetched from the API and all it's attributes
+type Provider struct {
+	Name       string `json:"Provider"`
+	MinVersion string `json:"MinVersion"`
+	MaxVersion string `json:"MaxVersion"`
+}
+
 // GetSupportedProviders
 /*
 @brief:
@@ -15,8 +22,8 @@ import (
 	[]string - list of supported Terraform providers
 	error - if exists, else nil
 */
-func GetSupportedProviders() ([]string, error) {
-	var parsedProviders []string
+func GetSupportedProviders() ([]Provider, error) {
+	var parsedProviders []Provider
 
 	// Prepare the method
 	req, _ := http.NewRequest("GET", "https://ty2nr6s4cvivq7zjxujpxi4aq40uqlqk.lambda-url.eu-west-1.on.aws/", nil)
@@ -25,7 +32,7 @@ func GetSupportedProviders() ([]string, error) {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return []string{}, err
+		return []Provider{}, err
 	}
 
 	// read body
@@ -33,12 +40,17 @@ func GetSupportedProviders() ([]string, error) {
 
 	container, _ := gabs.ParseJSON(body)
 	if container.ExistsP("error") {
-		return []string{}, errors.New("Oops.. something went wrong on out side. But rest asure we are on it!")
+		return []Provider{}, errors.New("Oops.. something went wrong on out side. But rest asure we are on it!")
 	}
 
 	providers, _ := container.Path("providers").Children()
 	for _, provider := range providers {
-		parsedProviders = append(parsedProviders, provider.String())
+		p := Provider{
+			Name:       utils.MustUnquote(provider.Path("provider").String()),
+			MinVersion: utils.MustUnquote(provider.Path("min_version").String()),
+			MaxVersion: utils.MustUnquote(provider.Path("max_version").String()),
+		}
+		parsedProviders = append(parsedProviders, p)
 	}
 
 	return parsedProviders, nil

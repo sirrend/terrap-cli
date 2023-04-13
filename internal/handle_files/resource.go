@@ -112,7 +112,7 @@ func (r Resource) IsResource() bool {
 func (r Resource) GetRuleset(rulebook rules_api.Rulebook, appearances map[string][]string) (rulesetObj rules_api.RuleSet, err error) {
 	var rules []rules_api.Rule
 
-	if ruleset, err := rulebook.GetRuleSetByResource(r.Name); err == nil {
+	if ruleset, err := rulebook.GetRuleSetByResource(r.Name, r.Type); err == nil {
 		if ruleset != nil {
 			if components, err := ruleset.Children(); err == nil {
 				for _, component := range components {

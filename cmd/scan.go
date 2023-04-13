@@ -9,6 +9,7 @@ import (
 	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
 	"github.com/sirrend/terrap-cli/internal/annotate"
+	"github.com/sirrend/terrap-cli/internal/cli_commons"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/handle_files"
 	"github.com/sirrend/terrap-cli/internal/rules_api"
@@ -36,7 +37,8 @@ var scanCmd = &cobra.Command{
 		var workspace workspace.Workspace
 		asJson := map[string]map[string]interface{}{}
 
-		if utils.IsInitialized(".") {
+		providersSet := cmd.Flag("fixed-providers").Changed
+		if utils.IsInitialized(".") || providersSet {
 			resources, err := handle_files.ScanFolderRecursively(".")
 			if err != nil {
 				_, _ = commons.RED.Println(err)
@@ -45,9 +47,13 @@ var scanCmd = &cobra.Command{
 			// find resource appearances
 			resourceAppearances := scanning.WhereDoesResourceAppear(resources)
 
-			err = state.Load("./.terrap.json", &workspace)
-			if err != nil {
-				_, _ = commons.RED.Println(err)
+			if !providersSet {
+				err = state.Load("./.terrap.json", &workspace)
+				if err != nil {
+					_, _ = commons.RED.Println(err)
+				}
+			} else {
+				workspace = cli_commons.GetFixedProvidersFlag(*cmd)
 			}
 
 			// go over every provider in user's folder
@@ -65,29 +71,35 @@ var scanCmd = &cobra.Command{
 					continue
 				}
 
+				flags := cli_commons.ChangedComponentsFlags(*cmd)
 				if !cmd.Flag("annotate").Changed {
 					for _, resource := range scanning.GetUniqResources(resources) {
-						ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
-						if err != nil {
-							_, _ = commons.RED.Println(err)
-							os.Exit(1)
-						}
+						if utils.IsItemInSlice(resource.Type, flags) {
 
-						// fill in json object
-						if cmd.Flag("json").Changed {
-							if ruleset.Rules != nil {
-								asJson[ruleset.ResourceName] = map[string]interface{}{
-									"Rules":       ruleset.Rules,
-									"Appearances": resourceAppearances[resource.Name],
+							ruleset, err := resource.GetRuleset(rulebook, resourceAppearances)
+							if err != nil {
+								_, _ = commons.RED.Println(err)
+								os.Exit(1)
+							}
+
+							// fill in json object
+							if cmd.Flag("json").Changed {
+								if ruleset.Rules != nil {
+									asJson[ruleset.ResourceName] = map[string]interface{}{
+										"Rules":       ruleset.Rules,
+										"Appearances": resourceAppearances[resource.Name],
+									}
+								}
+
+								// print human-readable output
+							} else {
+								ruleset.PrettyPrint()
+								if len(ruleset.Rules) != 0 {
+									PRINTED = true
 								}
 							}
-
-							// print human-readable output
 						} else {
-							ruleset.PrettyPrint()
-							if len(ruleset.Rules) != 0 {
-								PRINTED = true
-							}
+							PRINTED = true // to avoid wrong possible upgrade message
 						}
 					}
 
@@ -128,7 +140,7 @@ var scanCmd = &cobra.Command{
 			if !cmd.Flag("no-safe-upgrade-message").Changed && !cmd.Flag("no-messages").Changed {
 				if len(upgradeMessage) != 0 {
 					_, _ = commons.SIRREND.Println("The following providers are safe to upgrade: ")
-					fmt.Print(upgradeMessage)
+					fmt.Println(upgradeMessage)
 				}
 			}
 
@@ -136,7 +148,7 @@ var scanCmd = &cobra.Command{
 			if !cmd.Flag("no-not-supported-message").Changed && !cmd.Flag("no-messages").Changed {
 				if notYetSupportedMessage != "" {
 					message := strings.TrimLeft(notYetSupportedMessage, ", ")
-					_, _ = commons.SIRREND.Println("\n========== This message can be suppressed using --no-not-supported-message ==========")
+					_, _ = commons.SIRREND.Println("========== This message can be suppressed using --no-not-supported-message ==========")
 					_, _ = commons.SIRREND.Print("The following providers are not yet supported: ")
 					fmt.Println(message, emoji.CryingFace.String())
 					_, _ = commons.HighMagenta.Print("Check again soon! ")
@@ -154,10 +166,16 @@ var scanCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(scanCmd)
 
-	// scan command flags
+	// utility flags
 	scanCmd.Flags().BoolP("json", "j", false, "Print scan output as json.")
 	scanCmd.Flags().BoolP("annotate", "a", false, "Annotate the code itself.")
-	scanCmd.Flags().BoolP("no-safe-upgrade-message", "n", false, "Don't print which providers are safe to upgrade")
-	scanCmd.Flags().Bool("no-not-supported-message", false, "Don't print if providers are not supported")
-	scanCmd.Flags().Bool("no-messages", false, "Don't print any message other than pure command output")
+	scanCmd.Flags().BoolP("provider", "p", false, "Show only provider changes.")
+	scanCmd.Flags().BoolP("data-sources", "d", false, "Show only data source changes.")
+	scanCmd.Flags().BoolP("resources", "r", false, "Show only resources changes.")
+	scanCmd.Flags().StringSlice("fixed-providers", []string{}, "Set fixed provider version in the following format: `provider:version`.\nIf this flag is used, all other in-context providers are ignored.")
+
+	// extra output flags
+	scanCmd.Flags().Bool("no-safe-upgrade-message", false, "Don't print which providers are safe to upgrade.")
+	scanCmd.Flags().Bool("no-not-supported-message", false, "Don't print if providers are not supported.")
+	scanCmd.Flags().BoolP("no-messages", "n", false, "Don't print any message other than pure command output.")
 }

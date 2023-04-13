@@ -21,7 +21,7 @@ import (
 */
 func GetRules(provider, sourceVersion string) (Rulebook, error) {
 	// make the request
-	u, _ := url.Parse("https://oumoaz1pu2.execute-api.eu-west-1.amazonaws.com/prod")
+	u, _ := url.Parse("https://ry75faho5jdjuwcwplf4hkyupi0sszxg.lambda-url.eu-west-1.on.aws")
 	query := u.Query()
 	query.Set("provider", provider)
 	query.Set("source_version", sourceVersion)

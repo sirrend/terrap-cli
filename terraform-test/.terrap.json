@@ -6,6 +6,6 @@
 		"registry.terraform.io/hashicorp/aws": "3.74.3",
 		"registry.terraform.io/hashicorp/google": "3.90.1",
 		"registry.terraform.io/hashicorp/local": "2.1.0",
-		"registry.terraform.io/hashicorp/random": "3.4.3"
+		"registry.terraform.io/hashicorp/random": "3.5.0"
 	}
 }

@@ -5,8 +5,10 @@ Copyright © 2023 Sirrend
 package cmd
 
 import (
+	"fmt"
 	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
+	"github.com/sirrend/terrap-cli/internal/cli_commons"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/handle_files"
 	"github.com/sirrend/terrap-cli/internal/rules_api"
@@ -15,6 +17,7 @@ import (
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
 	"os"
+	"strings"
 )
 
 // whatsNewCmd represents the whatsNew command
@@ -25,17 +28,28 @@ var whatsNewCmd = &cobra.Command{
 		var workspace workspace.Workspace
 		asJson := map[string][]string{}
 
-		if utils.IsInitialized(".") {
-			err := state.Load("./.terrap.json", &workspace)
-			if err != nil {
-				_, _ = commons.RED.Println(err)
+		providersSet := cmd.Flag("fixed-providers").Changed
+		if utils.IsInitialized(".") || providersSet {
+			if !providersSet {
+				err := state.Load("./.terrap.json", &workspace)
+				if err != nil {
+					_, _ = commons.RED.Println(err)
+				}
+			} else {
+				workspace = cli_commons.GetFixedProvidersFlag(*cmd)
 			}
 
 			for provider, version := range workspace.Providers { // go over every provider in user's folder
 				rulebook, err := rules_api.GetRules(provider, version.String())
+				// validate rulebook downloaded
 				if err != nil {
-					_, _ = commons.RED.Println(emoji.CrossMark, "Terrap failed to receive changes, please make sure you're connected to the internet.")
-					os.Exit(1)
+					if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {
+						notYetSupportedMessage = strings.Join([]string{notYetSupportedMessage, err.Error()}, ", ")
+						continue
+					}
+
+					// TODO: add error here
+					continue
 				}
 
 				ruleSets, err := rulebook.GetAllRuleSets()
@@ -43,25 +57,30 @@ var whatsNewCmd = &cobra.Command{
 					os.Exit(1)
 				}
 
-				for resourceName, _ := range ruleSets { // go over all ruleSets
-					resource := handle_files.Resource{Name: resourceName}
-					ruleset, err := resource.GetRuleset(rulebook, nil)
-					if err != nil {
-						os.Exit(1)
-					}
+				flags := cli_commons.ChangedComponentsFlags(*cmd)
+				for resourcesType, resources := range ruleSets {
+					if utils.IsItemInSlice(resourcesType, flags) {
+						for resourceName, _ := range resources.(map[string]interface{}) { // go over all ruleSets
+							resource := handle_files.Resource{Name: resourceName, Type: resourcesType}
+							ruleset, err := resource.GetRuleset(rulebook, nil)
+							if err != nil {
+								os.Exit(1)
+							}
 
-					// fill in json object
-					if cmd.Flag("json").Changed {
-						if ruleset.Rules != nil {
-							asJson[resource.Name] = ruleset.GetNewComponents()
-						}
+							// fill in json object
+							if cmd.Flag("json").Changed {
+								if ruleset.Rules != nil {
+									asJson[resource.Name] = ruleset.GetNewComponents()
+								}
 
-						// print human-readable output
-					} else {
-						ruleset.PrettyPrintWhatsNew()
-						if len(ruleset.Rules) != 0 {
-							PRINTED = true
+								// print human-readable output
+							} else {
+								ruleset.PrettyPrintWhatsNew()
+								if len(ruleset.Rules) != 0 {
+									PRINTED = true
 
+								}
+							}
 						}
 					}
 				}
@@ -75,6 +94,15 @@ var whatsNewCmd = &cobra.Command{
 				}
 			}
 
+			// print not supported message
+			if !cmd.Flag("no-not-supported-message").Changed && !cmd.Flag("no-messages").Changed {
+				if notYetSupportedMessage != "" {
+					message := strings.TrimLeft(notYetSupportedMessage, ", ")
+					_, _ = commons.SIRREND.Print("The following providers are not yet supported: ")
+					fmt.Println(message, emoji.CryingFace.String())
+				}
+			}
+
 		} else {
 			yellow := color.New(color.FgYellow)
 			_, _ = yellow.Println("Hmm..seems like you didn't setup this folder yet.\nPlease execute < terrap init >.")
@@ -84,5 +112,15 @@ var whatsNewCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(whatsNewCmd)
+
+	// utility flags
 	whatsNewCmd.Flags().BoolP("json", "j", false, "Print whats-new output as json.")
+	whatsNewCmd.Flags().BoolP("provider", "p", false, "Show only provider changes.")
+	whatsNewCmd.Flags().BoolP("data-sources", "d", false, "Show only data source changes.")
+	whatsNewCmd.Flags().BoolP("resources", "r", false, "Show only resources changes.")
+	whatsNewCmd.Flags().StringSlice("fixed-providers", []string{}, "Set fixed provider version in the following format: `provider:version`.\nIf this flag is used, all other in-context providers are ignored.")
+
+	// extra output flags
+	whatsNewCmd.Flags().Bool("no-not-supported-message", false, "Don't print if providers are not supported.")
+	whatsNewCmd.Flags().Bool("no-messages", false, "Don't print any message other than pure command output.")
 }

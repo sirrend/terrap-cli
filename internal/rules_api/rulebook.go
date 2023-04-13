@@ -33,14 +33,14 @@ func (r Rulebook) GetTargetVersion() string {
 	rule - *gabs.Container - the rule as a gabs json object
 	err - error - if exists, else nil
 */
-func (r Rulebook) GetRuleSetByResource(resourceName string) (rule *gabs.Container, err error) {
+func (r Rulebook) GetRuleSetByResource(resourceName, resourceType string) (rule *gabs.Container, err error) {
 	jsonRuleBook, err := gabs.ParseJSON(r.Bytes)
 	if err != nil {
 		return &gabs.Container{}, err
 	}
 
-	if jsonRuleBook.ExistsP(resourceName) {
-		return jsonRuleBook.Path(resourceName), nil
+	if jsonRuleBook.ExistsP(resourceType + "." + resourceName) {
+		return jsonRuleBook.Path(resourceType + "." + resourceName), nil
 	}
 
 	return &gabs.Container{}, err

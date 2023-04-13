@@ -3,7 +3,6 @@ resource "aws_s3_bucket" "d" {
   alias = "test"
 
   logging {}
-
   object_lock_configuration {
     object_lock_enabled = ""
   }
