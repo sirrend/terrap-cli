@@ -22,7 +22,7 @@ import (
 */
 func GetRules(provider, sourceVersion string) (Rulebook, error) {
 	// make the request
-	u, _ := url.Parse(commons.API)
+	u, _ := url.Parse(commons.RulebooksAPI)
 	query := u.Query()
 	query.Set("provider", provider)
 	query.Set("source_version", sourceVersion)

@@ -6,9 +6,10 @@ import (
 )
 
 var (
-	API         = "https://api.sirrend.com"
-	GitHubOwner = "sirrend"
-	GitHubRepo  = "terrap-cli"
+	ProviderAPI  = "https://api.sirrend.com/supported-providers"
+	RulebooksAPI = "https://api.sirrend.com/rulebook"
+	GitHubOwner  = "sirrend"
+	GitHubRepo   = "terrap-cli"
 
 	YELLOW      = color.New(color.FgYellow)
 	GREEN       = color.New(color.FgGreen)

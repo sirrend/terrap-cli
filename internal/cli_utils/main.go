@@ -8,6 +8,7 @@ import (
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
+	validate "golang.org/x/mod/semver"
 	"os"
 	"strings"
 )
@@ -81,6 +82,7 @@ func ChangedComponentsFlags(cmd cobra.Command) []string {
 */
 func GetFixedProvidersFlag(cmd cobra.Command) workspace.Workspace {
 	var ws workspace.Workspace
+
 	ws.Providers = make(map[string]*version.Version)
 
 	fp, err := cmd.Flags().GetStringSlice("fixed-providers")
@@ -88,22 +90,28 @@ func GetFixedProvidersFlag(cmd cobra.Command) workspace.Workspace {
 		_, _ = commons.RED.Println(emoji.CrossMark, " Couldn't parse the received list of providers")
 		os.Exit(1)
 	}
+
 	for _, p := range fp {
 		if strings.Contains(p, ":") {
 			providerValue := strings.Split(p, ":")
 			if len(providerValue) > 1 {
-				v, err := version.NewVersion(providerValue[1])
-				if err != nil {
-					if providerValue[1] != "" {
-						_, _ = commons.RED.Println(emoji.CrossMark, " The received version is malformed: "+providerValue[1])
-					} else {
-						_, _ = commons.RED.Println(emoji.CrossMark, " Didn't receive a provider version")
+				if validate.IsValid("v" + providerValue[1]) {
+					v, err := version.NewVersion(providerValue[1])
+					if err != nil {
+						if providerValue[1] != "" {
+							_, _ = commons.RED.Println(emoji.CrossMark, " The received "+providerValue[0]+" version is malformed: "+providerValue[1])
+						} else {
+							_, _ = commons.RED.Println(emoji.CrossMark, " Didn't receive the provider version of "+providerValue[0])
+						}
+
+						os.Exit(1)
 					}
 
+					ws.Providers[providerValue[0]] = v
+				} else {
+					_, _ = commons.RED.Println(emoji.CrossMark, " The received "+providerValue[0]+" provider version is malformed: "+providerValue[1])
 					os.Exit(1)
 				}
-
-				ws.Providers[providerValue[0]] = v
 			} else {
 				_, _ = commons.RED.Println(emoji.CrossMark, " Provider:Version format received is malformed: "+p)
 				os.Exit(1)

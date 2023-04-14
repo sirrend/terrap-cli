@@ -3,6 +3,7 @@ package providers_api
 import (
 	"errors"
 	"github.com/Jeffail/gabs"
+	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"net/http"
 )
@@ -26,7 +27,7 @@ func GetSupportedProviders() ([]Provider, error) {
 	var parsedProviders []Provider
 
 	// Prepare the method
-	req, _ := http.NewRequest("GET", "https://ty2nr6s4cvivq7zjxujpxi4aq40uqlqk.lambda-url.eu-west-1.on.aws/", nil)
+	req, _ := http.NewRequest("GET", commons.ProviderAPI, nil)
 
 	// perform the request
 	client := &http.Client{}

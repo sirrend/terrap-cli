@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 /*
@@ -370,4 +371,22 @@ func ColorizedPrettyPrint(data any) {
 */
 func GetDirName(path string) string {
 	return filepath.Dir(path)
+}
+
+// ContainsNonNumeric
+/*
+@brief:
+	ContainsNonNumeric check if there are non-numeric chars inside a given string
+@params:
+	s - string - the string to check
+@returns:
+	bool - true if contains chars, otherwise false
+*/
+func ContainsNonNumeric(s string) bool {
+	for _, c := range s {
+		if !unicode.IsDigit(c) {
+			return true
+		}
+	}
+	return false
 }
