@@ -130,7 +130,7 @@ func (r Rule) PrettyPrintWhatsNew() {
 		fmt.Println(r.Notification)
 
 		if r.URL != "" {
-			_, _ = commons.YELLOW.Print("    Documentation: ")
+			_, _ = commons.YELLOW.Print("    Docs: ")
 			fmt.Println(r.URL, "\n")
 		}
 	}

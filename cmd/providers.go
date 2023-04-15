@@ -66,7 +66,10 @@ var getSupportedProvidersCmd = &cobra.Command{
 	Use:   "get-supported",
 	Short: "Outputs which providers are supported by terrap.",
 	Run: func(cmd *cobra.Command, args []string) {
-		var tableData [][]string
+		var (
+			tableData   [][]string
+			dataPrinted = false
+		)
 		table := cli_utils.GetTable([]string{"Provider", "Min Version", "Max Version"}) // initialize new table
 		providers, _ := providers_api.GetSupportedProviders()
 
@@ -86,14 +89,19 @@ var getSupportedProvidersCmd = &cobra.Command{
 			_, _ = commons.SIRREND.Println("The following providers are currently supported by Terrap: ")
 			table.AppendBulk(tableData)
 			table.Render()
+			dataPrinted = true
 		} else {
 			if cmd.Flag("filter").Changed {
 				_, _ = commons.YELLOW.Println("No providers matched your filter..", emoji.FaceWithoutMouth)
+			} else {
+				_, _ = commons.RED.Println(emoji.CrossMark, " Oops.. We messed up, check again soon.")
 			}
 		}
 
-		_, _ = commons.HighMagenta.Println("\n", emoji.Man, emoji.Woman, "Our Sirrend RockStars are hard at work, expanding our engine's capability to connect with more providers.")
-		_, _ = commons.HighMagenta.Println(" Exciting things are coming! Stay tuned: https://www.sirrend.com/")
+		if dataPrinted {
+			_, _ = commons.HighMagenta.Println("\n", emoji.Man, emoji.Woman, "Our Sirrend RockStars are hard at work, expanding our engine's capability to connect with more providers.")
+			_, _ = commons.HighMagenta.Println(" Exciting things are coming! Stay tuned: https://www.sirrend.com/")
+		}
 	},
 }
 
