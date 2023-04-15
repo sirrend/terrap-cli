@@ -1,2 +1,28 @@
-# terrap-cli
-Terrap is a CLI utility used to notify about Terraform deprecations in your code! 
+# Terrap by Sirrend
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) </br>
+Simplify your Provider version upgrades with Terrap - a powerful CLI tool that scans your system and identifies any required changes. </br>
+The tool offers clear and actionable notifications, helping you streamline the upgrade process and avoid any potential errors or complications. 
+
+## How to Download
+#### Clone the Terrap-CLI Repository
+```shell
+git clone https://github.com/sirrend/terrap-cli
+cd terrap-cli
+
+go build -o terrap .
+
+chmod +x terrap
+mv terrap /usr/local/bin/
+```
+
+#### Brew
+```shell
+brew install terrap-cli
+```
+
+## Quick Start
+1. Go to your IaC repository local folder.
+2. Initialize a new terrap workspace where you would run `terraform apply` with `terrap init -c`, or you can initialize another folder with: `terrap init -d <location>`
+3. Scan your workspace with: `terrap scan`
+
+![Terrap Scan](docs/terrap-scan.gif)
