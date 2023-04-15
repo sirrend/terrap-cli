@@ -21,8 +21,8 @@ brew install terrap-cli
 ```
 
 ## Quick Start
-1. Go to your IaC repository local folder.
-2. Initialize a new terrap workspace where you would run `terraform apply` with `terrap init -c`, or you can initialize another folder with: `terrap init -d <location>`
+1. Go to your local IaC repository folder.
+2. Initialize a new terrap workspace where you would run `terraform apply` with `terrap init -c`.
 3. Scan your workspace with: `terrap scan`
 
 ![Terrap Scan](docs/terrap-scan.gif)
