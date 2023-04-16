@@ -1,4 +1,4 @@
-<h1 style="color: #800080;">Terrap, by Sirrend</h1>
+# Terrap, by Sirrend
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)  ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/sirrend/terrap-cli?filename=go.mod)</br>
 <img src="./docs/terrap-cover.png"/>
 </br></br>
@@ -22,7 +22,7 @@ mv terrap /usr/local/bin/
 brew install terrap-cli
 ```
 
-<h2 style="color: #800080;">Quick Start ⏩</h2>
+## Quick Start ⏩
 1. Go to your local IaC repository folder.
 2. Initialize a new terrap workspace where you would run `terraform apply` with `terrap init -c`.
 3. Scan your workspace with: `terrap scan`
@@ -30,8 +30,7 @@ brew install terrap-cli
 
 https://user-images.githubusercontent.com/47568615/232331582-998cb9dc-4ad4-465e-af31-4fab0c77877b.mov
 
-
-<h2 style="color: #800080;">Features 🚀</h2>
+## Features 🚀
 ### Scan for changes with `scan`
 Scan your infrastructure for changes in the following provider version for a safe and easy upgrade!</br>
 Looking for a specific resource type changes? Use the `--data-sources` `--resources` and `--provider` flags.
@@ -45,15 +44,15 @@ Run `terrap providers get-supported` to get a list of all supported providers an
 You can use the `--filter` flag if you're looking for something specific.
 
 
-<h2 style="color: #800080;">What's the Future Hold 🔮</h2>
+## What's the Future Hold 🔮
 1. Bulk updates - straight to a version of your choosing.
 2. Automatic Upgrades - you write, **Terrap** upgrades.
 3. Expanding Terrap's providers support.
 
-<h2 style="color: #800080;">Something's Wrong? Tell Us! 🚨</h2>
+## Something's Wrong? Tell Us! 🚨
 You can open an issue either directly from the CLI using `terrap open-issue` or through the GitHub UI.
 
-<h2 style="color: #800080;">Want to contribute? 🍀 Lucky us!</h2>
+## Want to contribute? 🍀 Lucky us!
 1. Checkout from the `main` branch.
 2. Add your code with the proper documentation.
 3. Open a PR with a detailed explanation of the functionality you want to add.
