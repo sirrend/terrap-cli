@@ -25,4 +25,5 @@ brew install terrap-cli
 2. Initialize a new terrap workspace where you would run `terraform apply` with `terrap init -c`.
 3. Scan your workspace with: `terrap scan`
 
-![Terrap Scan](docs/terrap-scan.gif)
+
+https://user-images.githubusercontent.com/47568615/232330641-f7409ee9-def1-42a0-aace-cb4139b9d72d.mov
