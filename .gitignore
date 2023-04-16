@@ -1,5 +1,5 @@
-terraform-test/.terraform
-terraform-test/.terraform.lock.hcl
+test-env/terraform-test/.terraform
+test-env/terraform-test/.terraform.lock.hcl
 .idea
 terraform/terrap
 .DS_Store

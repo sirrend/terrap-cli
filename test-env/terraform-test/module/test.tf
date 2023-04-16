@@ -5,6 +5,9 @@ resource "aws_s3_bucket" "c" {
     Name        = "My bucket"
     Environment = "Dev"
   }
+  logging {
+    
+  }
 }
 
 

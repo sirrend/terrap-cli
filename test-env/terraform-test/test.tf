@@ -3,7 +3,7 @@ output "output" {
 }
 
 module "test" {
-  source = "../terraform-backend-modules-test/test-module/"
+  source = "../terraform-backend-modules-test/test-module"
   name   = "testing"
 }
 
@@ -15,7 +15,6 @@ resource "aws_s3_bucket" "b" {
   acceleration_status = {}
 
 # deprecated: Use the aws_s3_bucket_logging resource instead.
-  logging = {}
 
 # A new 'object_lock_enabled' attribute is now available
   object_lock_enabled = {}
