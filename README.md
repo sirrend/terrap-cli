@@ -5,7 +5,7 @@
 Simplify your Provider version upgrades with **Terrap** - a powerful CLI tool that scans your system and identifies any required changes. </br>
 The tool offers clear and actionable notifications, helping you streamline the upgrade process and avoid any potential errors or complications. 
  
-<h2 style="color: #800080;">How to Download ⬇️</h2>
+## How to Download ⬇️
 #### Clone the Terrap-CLI Repository
 ```shell
 git clone https://github.com/sirrend/terrap-cli
