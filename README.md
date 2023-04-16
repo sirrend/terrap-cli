@@ -4,7 +4,17 @@
 </br></br>
 Simplify your Provider version upgrades with **Terrap** - a powerful CLI tool that scans your system and identifies any required changes. </br>
 The tool offers clear and actionable notifications, helping you streamline the upgrade process and avoid any potential errors or complications. 
- 
+
+## Constraints 🧱
+1. Supported Terraform Core versions: `>=0.13`.
+2. Every provider which uses `Terraform Core 0.13` or higher.
+
+## Good To Know 💡
+Terrap decides which Terraform version to use in the following order:
+1. The latest installed Terraform version found locally.
+2. If the `TERRAP_TERRAFORM_VERSION` environment variable is set, Terrap will use the version specified in the variable as long as it matches the `>=0.13` constraint.
+3. If none of the above is applicable, Terrap will download the latest available version.
+4. 
 ## How to Download ⬇️
 #### Clone sirrend/terrap-cli
 ```shell
