@@ -14,7 +14,7 @@ Terrap decides which Terraform version to use in the following order:
 1. The latest installed Terraform version found locally.
 2. If the `TERRAP_TERRAFORM_VERSION` environment variable is set, Terrap will use the version specified as long as it matches the `>=0.13` constraint.
 3. If none of the above is applicable, Terrap will download the latest available version.
-4. 
+
 ## How to Download ⬇️
 #### Clone sirrend/terrap-cli
 ```shell
