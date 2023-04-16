@@ -5,3 +5,4 @@ terraform/terrap
 .DS_Store
 .notes
 diffSets.json
+.idea
