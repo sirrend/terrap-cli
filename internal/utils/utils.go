@@ -390,3 +390,21 @@ func ContainsNonNumeric(s string) bool {
 	}
 	return false
 }
+
+// FileExists
+/*
+@brief:
+	FileExists checks if a file exists
+@params:
+	path - string - the path to check
+@returns:
+	bool - true if exists, otherwise false
+*/
+func FileExists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+
+	return true
+}

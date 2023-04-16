@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-exec/tfexec"
 	ver "github.com/hashicorp/terraform/version"
 	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"log"
 	"os"
@@ -22,6 +23,31 @@ import (
 
 type terraformVersion struct {
 	Terraform_version string
+}
+
+// RemoveTempTerraformExecutor
+/*
+@brief:
+	RemoveTempTerraformExecutor deletes the Terraform executor received
+@params:
+	execPath - string - the path to remove
+@returns:
+	error - if exists, else nil
+*/
+func RemoveTempTerraformExecutor(execPath string) error {
+	if utils.FileExists(execPath) {
+		splintedPath := strings.Split(execPath, "/")
+		splintedPath = splintedPath[:len(splintedPath)-1]
+
+		execPath = strings.Join(splintedPath, "/")
+		err := os.RemoveAll(execPath)
+		if err != nil {
+			err = errors.New("error: failed to remove temporary terraform executor")
+			return err
+		}
+	}
+
+	return nil
 }
 
 /*
@@ -42,7 +68,7 @@ func IsTerraformInstalled() bool {
 @         tv - the Terraform version
 */
 
-func InstallTf() (execPath string, tv string) {
+func InstallTf() (execPath string, isTempVersion bool, tv string) {
 	terraformUserVersion := os.Getenv("TERRAP_TERRAFORM_VERSION") // user decided he wants a specific version
 
 	if IsTerraformInstalled() && terraformUserVersion == "" {
@@ -69,15 +95,15 @@ func InstallTf() (execPath string, tv string) {
 			os.Exit(1)
 		}
 
-		return path, tVersion.Terraform_version
+		return path, false, tVersion.Terraform_version
 
 	} else if terraformUserVersion != "" {
-		_, _ = commons.YELLOW.Println(emoji.DesktopComputer, "Using Terraform version:", terraformUserVersion)
+		_, _ = commons.YELLOW.Println(emoji.DesktopComputer, " Using Terraform version:", terraformUserVersion)
 
 		// set installer details
 		installer := &releases.ExactVersion{
 			Product: product.Terraform,
-			Version: version.Must(version.NewVersion(ver.Version)),
+			Version: version.Must(version.NewVersion(terraformUserVersion)),
 		}
 
 		// install terraform in context of the given directory
@@ -88,9 +114,9 @@ func InstallTf() (execPath string, tv string) {
 			os.Exit(1)
 		}
 
-		return execPath, ver.Version
+		return execPath, true, ver.Version
 	} else {
-		_, _ = commons.YELLOW.Println(emoji.DesktopComputer, "Using Terraform version:", ver.Version)
+		_, _ = commons.YELLOW.Println(emoji.DesktopComputer, " Using Terraform version:", ver.Version)
 
 		// set installer details
 		installer := &releases.ExactVersion{
@@ -106,7 +132,7 @@ func InstallTf() (execPath string, tv string) {
 			os.Exit(1)
 		}
 
-		return execPath, ver.Version
+		return execPath, true, ver.Version
 	}
 }
 
@@ -136,10 +162,11 @@ func FindTfProviders(dir string, main *workspace.Workspace) map[string]*version.
 // NewTerraformExecutor
 /*
 @brief: NewTerraformExecutor creates a new terraform executor
-@
+
 @params: dir - the directory to run terraform in
-@        execPath - the path to the Terraform executable
-@returns: *tfexec.Terraform - the terraform executor
+        execPath - the path to the Terraform executable
+@returns:
+	*tfexec.Terraform - the terraform executor
 */
 func NewTerraformExecutor(dir string, execPath string) *tfexec.Terraform {
 	dir, _ = filepath.Abs(dir)
@@ -154,26 +181,32 @@ func NewTerraformExecutor(dir string, execPath string) *tfexec.Terraform {
 }
 
 /*
-@brief: terraformInit performs the `terraform init` command on the given folder
-@
-@params: dir - the folder to initialize
+@brief:
+	terraformInit performs the `terraform init` command on the given folder
+@params:
+	dir - the folder to initialize
+@returns:
+	execPath - string - the Terraform executor
+	isTempVersion - bool - is a temporary terraform executor
+	terraformToolVersion - string - the tool version
+	err - error - if exists, else nil
 */
 
-func TerraformInit(dir string) (string, string, error) {
-	execPath, terraformToolVersion := InstallTf()
+func TerraformInit(dir string) (execPath string, isTempVersion bool, terraformToolVersion string, err error) {
+	execPath, isTempVersion, terraformToolVersion = InstallTf()
 
 	tf := NewTerraformExecutor(dir, execPath)
 
 	// initialize terraform in the given folder
-	err := tf.Init(context.Background(), tfexec.Upgrade(true))
+	err = tf.Init(context.Background(), tfexec.Upgrade(true))
 	if err != nil {
 		if strings.Contains(err.Error(), "net/http") {
-			err = errors.New("Terrap experienced some networking issues, please make sure you have a stable internet connection")
-			return "", "", err
+			err = errors.New("error: Terrap experienced some networking issues, please make sure you have a stable internet connection")
+			return "", false, "", err
 		} else {
-			return "", "", err
+			return "", false, "", err
 		}
 	}
 
-	return execPath, terraformToolVersion, nil
+	return execPath, isTempVersion, terraformToolVersion, nil
 }

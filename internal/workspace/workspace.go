@@ -4,10 +4,11 @@ import "github.com/hashicorp/go-version"
 
 // Workspace represents the data to be saved in the state file
 type Workspace struct {
-	Location         string
-	ExecPath         string
-	TerraformVersion string
-	Providers        map[string]*version.Version
+	Location         string                      `json:"Location"`
+	ExecPath         string                      `json:"ExecPath,omitempty"`
+	TerraformVersion string                      `json:"TerraformVersion,omitempty"`
+	IsTempProvider   bool                        `json:"IsTempProvider,omitempty"`
+	Providers        map[string]*version.Version `json:"Providers"`
 }
 
 func (ws Workspace) GetProviderNames() []string {

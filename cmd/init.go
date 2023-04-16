@@ -13,6 +13,7 @@ import (
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/terraform_utils"
 	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/workspace"
 	"os"
 	"path"
 	"path/filepath"
@@ -33,7 +34,7 @@ func terraformInit(dir string) {
 
 	if err != nil {
 		_, _ = commons.YELLOW.Println(emoji.Rocket, "Initializing directory...")
-		mainWorkspace.ExecPath,
+		mainWorkspace.ExecPath, mainWorkspace.IsTempProvider,
 			mainWorkspace.TerraformVersion, err = terraform_utils.TerraformInit(dir) // initiate new terraform tool in context
 
 		if err != nil {
@@ -80,19 +81,42 @@ func saveInitData() {
 @params: dir - the folder to delete the init file from
 */
 func deleteInitData(dir string) {
-	_, _ = commons.YELLOW.Print(emoji.Broom, " Cleaning up former configuration...")
-	err := os.Remove(path.Join(dir, ".terrap.json"))
-	if err != nil {
-		_, _ = commons.GREEN.Println(" Nothing to do.")
+	var ws workspace.Workspace
+	if utils.IsInitialized(dir) {
+		_, _ = commons.YELLOW.Println(emoji.Broom, "Cleaning up former configuration...")
+
+		err := state.Load(filepath.Join(dir, ".terrap.json"), &ws)
+		if err != nil {
+			_, _ = commons.RED.Println(err)
+			os.Exit(1)
+		}
+
+		if ws.IsTempProvider {
+			err = terraform_utils.RemoveTempTerraformExecutor(ws.ExecPath)
+			if err != nil {
+				_, _ = commons.RED.Println(err)
+				os.Exit(1)
+			}
+			_, _ = commons.YELLOW.Println(emoji.CheckMark, " Temporary Terraform executor removed")
+		}
+
+		err = os.Remove(path.Join(dir, ".terrap.json"))
+		if err != nil {
+			_, _ = commons.RED.Println(emoji.CrossMark, " Failed to clean up the current workspace.")
+			os.Exit(1)
+		}
+		_, _ = commons.YELLOW.Println(emoji.CheckMark, " Configuration file removed")
+
+		// delete Terraform files if exist
+		_ = os.Remove(path.Join(dir, ".terraform.lock.hcl"))
+		_ = os.RemoveAll(path.Join(dir, ".terraform"))
+
+		_, _ = commons.GREEN.Println("\nWorkspace removed.")
+
+	} else {
 		_, _ = commons.YELLOW.Println("The given directory is not initialized.")
 		os.Exit(0)
 	}
-
-	// delete Terraform files if exist
-	_ = os.Remove(path.Join(dir, ".terraform.lock.hcl"))
-	_ = os.RemoveAll(path.Join(dir, ".terraform"))
-
-	_, _ = commons.GREEN.Println(" Done!")
 }
 
 // the init command declaration
