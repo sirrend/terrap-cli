@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="000efb24-97c5-4cc8-906f-1b9373634141" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/cover.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/terrap-scan.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/twitter-cover.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/terrap-cover.jpg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
