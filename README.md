@@ -32,15 +32,15 @@ https://user-images.githubusercontent.com/47568615/232331582-998cb9dc-4ad4-465e-
 
 
 ## Features
-#### Scan for changes with `scan`
+### Scan for changes with `scan`
 Scan your infrastructure for changes in the following provider version for a safe and easy upgrade!</br>
 Looking for a specific resource type changes? Use the `--data-sources` `--resources` and `--provider` flags.
 
-#### Stay up-to-date with `whats-new`
+### Stay up-to-date with `whats-new`
 Ready to explore what's new in the following version of your provider? Simply execute `terrap whats-new`.</br>
 Looking to delve into a specific version of your provider? Specify the desired version with `--fixed-providers <provider>:<version>` to explore what's new and improved.
 
-#### Which Providers are Supported?
+### Which Providers are Supported?
 Run `terrap providers get-supported` to get a list of all supported providers and version ranges.</br>
 You can use the `--filter` flag if you're looking for something specific.
 
