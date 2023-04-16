@@ -1,5 +1,6 @@
-# Terrap, by <img height="30" src="./docs/Sirrend-04.svg" width="110"/>
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) </br>
+# Terrap, by Sirrend
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)  ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/sirrend/terrap-cli?filename=go.mod)</br>
+<img src="./docs/twitter-cover.jpg"/>
 Simplify your Provider version upgrades with Terrap - a powerful CLI tool that scans your system and identifies any required changes. </br>
 The tool offers clear and actionable notifications, helping you streamline the upgrade process and avoid any potential errors or complications. 
 
