@@ -7,31 +7,10 @@ module "test" {
   name   = "testing"
 }
 
-resource "aws_s3_bucket" "b" {
-  bucket = "my-tf-test-bucket"
-
-
-# deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
-  acceleration_status = {}
-
-# deprecated: Use the aws_s3_bucket_logging resource instead.
-
-# A new 'object_lock_enabled' attribute is now available
-  object_lock_enabled = {}
-
-  tags = {
-    Name        = "My bucket"
-    Environment = "Dev"
-  }
-}
 resource "aws_s3_bucket" "fasdfasd" {
   bucket = "my-tf-test-bucket"
 
-
-# deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
   acceleration_status = {}
-
-# deprecated: Use the aws_s3_bucket_logging resource instead.
   logging = {}
 
   tags = {
@@ -43,13 +22,8 @@ resource "aws_s3_bucket" "fasdfasd" {
 resource "aws_s3_bucket" "d" {
   bucket = "my-tf-test-bucket"
 
-
-# deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
   acceleration_status = {}
-
-# deprecated: Use the aws_s3_bucket_logging resource instead.
   logging = {}
-
   object_lock_configuration {}
 
   tags = {

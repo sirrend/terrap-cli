@@ -111,10 +111,12 @@ var scanCmd = &cobra.Command{
 											}
 										}
 
-										asText = append(asText, appliedRules{
-											ruleSet: ruleset,
-											rules:   rules,
-										})
+										if len(rules) > 0 {
+											asText = append(asText, appliedRules{
+												ruleSet: ruleset,
+												rules:   rules,
+											})
+										}
 									}
 								}
 							} else {
