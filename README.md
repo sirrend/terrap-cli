@@ -3,7 +3,8 @@
 <img src="./docs/terrap-cover.png"/>
 </br></br>
 Simplify your Provider version upgrades with **Terrap** - a powerful CLI tool that scans your system and identifies any required changes. </br>
-The tool offers clear and actionable notifications, helping you streamline the upgrade process and avoid any potential errors or complications. 
+The tool offers clear and actionable notifications, helping you streamline the upgrade process and avoid any potential errors or complications.</br></br>
+🔍 Terrap is an alpha version project, therefore some data might be partial.
 
 ## Constraints 🧱
 1. Supported Terraform Core versions: `>=0.13`.
