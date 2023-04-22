@@ -210,3 +210,113 @@ func TerraformInit(dir string) (execPath string, isTempVersion bool, terraformTo
 
 	return execPath, isTempVersion, terraformToolVersion, nil
 }
+
+// terraformErrorParser
+/*
+@brief:
+	terraformErrorParser gets an error and parses it to `reason: explanation`
+@params:
+	err - error - the error to parse
+@returns:
+	map[string]string - the parsed error as a map of `reason: explanation`
+*/
+func terraformErrorParser(err error) []map[string]string {
+	var parsedError []map[string]string
+	errorLines := strings.Split(err.Error(), "\n")
+
+	for lineIndex, line := range errorLines {
+		if strings.Contains(line, "Error:") || strings.Contains(line, "Error ") {
+			var description string
+
+			for _, descriptionLine := range errorLines[lineIndex+1:] {
+				if !strings.Contains(descriptionLine, "Error: ") || !strings.Contains(descriptionLine, "Error ") {
+					description += descriptionLine + "\n"
+				}
+
+				if strings.Contains(descriptionLine, "Error: ") || strings.Contains(descriptionLine, "Error ") {
+					break
+				}
+			}
+
+			if strings.Contains(line, "Error: ") {
+				parsedError = append(parsedError, map[string]string{strings.Split(line, "Error: ")[1]: description})
+			} else if strings.Contains(line, "Error ") {
+				parsedError = append(parsedError, map[string]string{line: description})
+			}
+		}
+	}
+
+	return parsedError
+}
+
+// removeIdenticalErrorParagraphs
+/*
+@brief:
+	removeIdenticalErrorParagraphs finds identical error paragraphs in different error messages and trim them from each one
+@params:
+	err - error - the error to parse
+*/
+func removeIdenticalErrorParagraphs(tfErrors []map[string]string) []map[string]string {
+	var (
+		paragraphs       []string
+		paraToRemove     []string
+		modifiedTfErrors = tfErrors
+	)
+
+	// find all common paragraphs in errors
+	if len(tfErrors) > 1 {
+		for _, err := range tfErrors {
+			for _, description := range err {
+				for _, para := range strings.Split(description, "\n\n") { // split on empty line
+					if !utils.IsItemInSlice(para, paragraphs) { // find non unique paragraphs
+						paragraphs = append(paragraphs, para)
+
+					} else if !utils.IsItemInSlice(para, paraToRemove) && para != "\n" { // add paragraphs to remove if unique
+						paraToRemove = append(paraToRemove, para)
+					}
+				}
+			}
+		}
+
+		for _, err := range modifiedTfErrors {
+			for k, description := range err {
+				for _, remove := range paraToRemove {
+					err[k] = strings.ReplaceAll(description, remove, "")
+				}
+			}
+		}
+	}
+
+	return modifiedTfErrors
+}
+
+// TerraformErrorPrettyPrint
+/*
+@brief:
+	TerraformErrorPrettyPrint prints the terraform error given
+@params:
+	err - error - the error to parse
+*/
+func TerraformErrorPrettyPrint(err error) {
+	tfErrors := terraformErrorParser(err)
+
+	if len(tfErrors) > 1 {
+		commons.RED.Println("Terrap failed with the following errors: ")
+	} else if len(tfErrors) == 1 {
+		commons.RED.Println("Terrap failed with the following error: ")
+	}
+
+	for _, err := range removeIdenticalErrorParagraphs(tfErrors) {
+		for k, description := range err {
+			commons.RED.Print("  " + k + ":\n")
+
+			for _, line := range strings.Split(description, "\n") {
+				if line != "" {
+					fmt.Println("    " + line)
+				}
+			}
+
+			fmt.Println() // separate next paragraph
+		}
+	}
+}

@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -104,7 +105,13 @@ func analyzeResources(resources map[string]*tfconfig.Resource) ([]Resource, erro
 	error - if exists, else nil
 */
 func getLocalModuleResources(dir string, module tfconfig.ModuleCall) ([]Resource, error) {
-	abs := utils.GetAbsPath(filepath.Join(dir, module.Source))
+	var abs string
+	if !path.IsAbs(module.Source) {
+		abs = utils.GetAbsPath(filepath.Join(dir, module.Source))
+	} else {
+		abs = module.Source
+	}
+
 	if utils.DoesExist(abs) {
 		tempModuleResources, err := ScanFolder(abs)
 		if err != nil {

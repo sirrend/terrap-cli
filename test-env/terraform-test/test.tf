@@ -2,10 +2,10 @@ output "output" {
   value = "test"
 }
 
-module "test" {
-  source = "../terraform-backend-modules-test/test-module"
-  name   = "testing"
-}
+# module "test" {
+#   source = "../terraform-backend-modules-test/test-module"
+#   name   = "testing"
+# }
 
 resource "aws_s3_bucket" "fasdfasd" {
   bucket = "my-tf-test-bucket"
@@ -71,10 +71,4 @@ module "module_example_complete" {
   source  = "cloudposse/module/example//examples/complete"
   version = "1.0.0"
   # insert the 15 required variables here
-}
-
-resource "google_runtimeconfig_config_iam_binding" "test" {
-  config  = ""
-  members = []
-  role    = ""
 }

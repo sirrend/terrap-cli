@@ -1,6 +1,7 @@
 package cli_utils
 
 import (
+	"fmt"
 	"github.com/common-nighthawk/go-figure"
 	"github.com/enescakir/emoji"
 	"github.com/hashicorp/go-version"
@@ -21,6 +22,7 @@ import (
 func SirrendLogoPrint() {
 	myFigure := figure.NewColorFigure("Sirrend", "", "purple", true)
 	myFigure.Print()
+	fmt.Println()
 }
 
 // flagsToAPIRepresentation

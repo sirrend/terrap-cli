@@ -62,122 +62,137 @@ var scanCmd = &cobra.Command{
 			}
 
 			// go over every provider in user's folder / user's declaration
-			for provider, version := range workspace.Providers {
-				rulebook, err := rules_api.GetRules(provider, version.String())
-				// validate rulebook downloaded
-				if err != nil {
-					if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {
-						notYetSupportedMessage = strings.Join([]string{notYetSupportedMessage, err.Error()}, ", ")
-						continue
-					}
+			if len(workspace.Providers) > 0 {
 
-					continue
-				}
-
-				flags := cli_utils.ChangedComponentsFlags(*cmd)
-				if !cmd.Flag("annotate").Changed {
-					for file, fileResources := range files {
-						if len(fileResources) == 0 {
+				for provider, version := range workspace.Providers {
+					rulebook, err := rules_api.GetRules(provider, version.String())
+					// validate rulebook downloaded
+					if err != nil {
+						if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {
+							notYetSupportedMessage = strings.Join([]string{notYetSupportedMessage, err.Error()}, ", ")
 							continue
 						}
 
-						for _, resource := range scanning.GetUniqResources(fileResources) {
-							if utils.IsItemInSlice(resource.Type, flags) {
+						continue
+					}
+
+					flags := cli_utils.ChangedComponentsFlags(*cmd)
+					if !cmd.Flag("annotate").Changed {
+						for file, fileResources := range files {
+							if len(fileResources) == 0 {
+								continue
+							}
+
+							for _, resource := range scanning.GetUniqResources(fileResources) {
+								if utils.IsItemInSlice(resource.Type, flags) {
+									ruleset, err := resource.GetRuleset(rulebook, nil)
+									if err != nil {
+										_, _ = commons.RED.Println(err)
+										os.Exit(1)
+									}
+
+									// fill json object with applied rules
+									if cmd.Flag("json").Changed {
+										if ruleset.Rules != nil {
+											for _, rule := range ruleset.Rules {
+												if apply, err := rule.DoesRuleApplyInContext(file, resource.Name, resource.Type); err == nil && apply {
+													asJson[ruleset.ResourceName] = append(asJson[ruleset.ResourceName], rule)
+													PRINTED = true
+												}
+											}
+										}
+
+										// combine ruleSets with applied rules
+									} else {
+										if ruleset.Rules != nil {
+											var rules []rules_api.Rule
+											for _, rule := range ruleset.Rules {
+												if apply, err := rule.DoesRuleApplyInContext(file, resource.Name, resource.Type); err == nil && apply {
+													rules = append(rules, rule)
+													PRINTED = true
+												}
+											}
+
+											if len(rules) > 0 {
+												asText = append(asText, appliedRules{
+													ruleSet: ruleset,
+													rules:   rules,
+												})
+											}
+										}
+									}
+								} else {
+									PRINTED = true // to avoid wrong possible upgrade message
+								}
+							}
+
+							// print json object
+							if cmd.Flag("json").Changed {
+								if len(asJson) != 0 {
+									utils.PrettyPrintStruct(map[string]interface{}{file: asJson})
+								}
+
+								asJson = map[string][]rules_api.Rule{} // reset for next provider
+
+							} else {
+								if len(asText) > 0 {
+									_, _ = commons.SIRREND.Println("File:", utils.GetAbsPath(file))
+								}
+
+								for _, appliedRules := range asText {
+									if len(appliedRules.rules) > 0 {
+										appliedRules.ruleSet.PrettyPrint(appliedRules.rules)
+									}
+								}
+
+								asText = []appliedRules{} // clean up for next iteration
+							}
+						}
+
+						// check if upgrade is possible for the provider in context
+						if !PRINTED {
+							if rulebook.TargetVersion != "" {
+								upgradeMessage += fmt.Sprintf("  %s  %s: ",
+									emoji.UpArrow, utils.StripProviderPrefix(provider))
+								upgradeMessage += commons.GREEN.Sprintf("%s -> %s\n", version, rulebook.TargetVersion)
+
+								PRINTED = false // for next provider
+							}
+						}
+
+					} else {
+						for _, fileResources := range files {
+							for _, resource := range fileResources {
 								ruleset, err := resource.GetRuleset(rulebook, nil)
 								if err != nil {
 									_, _ = commons.RED.Println(err)
 									os.Exit(1)
 								}
 
-								// fill json object with applied rules
-								if cmd.Flag("json").Changed {
-									if ruleset.Rules != nil {
-										for _, rule := range ruleset.Rules {
-											if apply, err := rule.DoesRuleApplyInContext(file, resource.Name, resource.Type); err == nil && apply {
-												asJson[ruleset.ResourceName] = append(asJson[ruleset.ResourceName], rule)
-												PRINTED = true
-											}
-										}
-									}
-
-									// combine ruleSets with applied rules
-								} else {
-									if ruleset.Rules != nil {
-										var rules []rules_api.Rule
-										for _, rule := range ruleset.Rules {
-											if apply, err := rule.DoesRuleApplyInContext(file, resource.Name, resource.Type); err == nil && apply {
-												rules = append(rules, rule)
-												PRINTED = true
-											}
-										}
-
-										if len(rules) > 0 {
-											asText = append(asText, appliedRules{
-												ruleSet: ruleset,
-												rules:   rules,
-											})
-										}
-									}
-								}
-							} else {
-								PRINTED = true // to avoid wrong possible upgrade message
+								annotate.AddAnnotationByRuleSet(resource, ruleset)
 							}
-						}
-
-						// print json object
-						if cmd.Flag("json").Changed {
-							if len(asJson) != 0 {
-								utils.PrettyPrintStruct(map[string]interface{}{file: asJson})
-							}
-
-							asJson = map[string][]rules_api.Rule{} // reset for next provider
-
-						} else {
-							if len(asText) > 0 {
-								_, _ = commons.SIRREND.Println("File:", utils.GetAbsPath(file))
-							}
-
-							for _, appliedRules := range asText {
-								if len(appliedRules.rules) > 0 {
-									appliedRules.ruleSet.PrettyPrint(appliedRules.rules)
-								}
-							}
-
-							asText = []appliedRules{} // clean up for next iteration
-						}
-					}
-
-					// check if upgrade is possible for the provider in context
-					if !PRINTED {
-						if rulebook.TargetVersion != "" {
-							upgradeMessage += fmt.Sprintf("  %s %s: ",
-								emoji.UpArrow, utils.StripProviderPrefix(provider))
-							upgradeMessage += commons.GREEN.Sprintf("%s -> %s\n", version, rulebook.TargetVersion)
-
-							PRINTED = false // for next provider
-						}
-					}
-
-				} else {
-					for _, fileResources := range files {
-						for _, resource := range fileResources {
-							ruleset, err := resource.GetRuleset(rulebook, nil)
-							if err != nil {
-								_, _ = commons.RED.Println(err)
-								os.Exit(1)
-							}
-
-							annotate.AddAnnotationByRuleSet(resource, ruleset)
 						}
 					}
 				}
+			} else {
+				_, _ = commons.YELLOW.Println("Couldn't find any providers under the provided context.")
 			}
 
 			// print safe upgrade message
 			if !cmd.Flag("no-safe-upgrade-message").Changed && !cmd.Flag("no-messages").Changed {
+				longestLine := 45
+
 				if upgradeMessage != "" {
+					for _, line := range strings.Split(upgradeMessage, "\n") {
+						if len(line) > longestLine {
+							longestLine = len(line)
+						}
+					}
+
+					utils.PrintCharacterXTimes("-", longestLine)
 					_, _ = commons.SIRREND.Println("The following providers are safe to upgrade: ")
 					fmt.Println(upgradeMessage)
+					utils.PrintCharacterXTimes("-", longestLine)
 				}
 			}
 

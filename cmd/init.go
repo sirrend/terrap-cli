@@ -13,13 +13,10 @@ import (
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/terraform_utils"
 	"github.com/sirrend/terrap-cli/internal/utils"
-	"github.com/sirrend/terrap-cli/internal/workspace"
+	"github.com/spf13/cobra"
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
-
-	"github.com/spf13/cobra"
 )
 
 // terraformInit
@@ -39,12 +36,7 @@ func terraformInit(dir string) {
 
 		if err != nil {
 			fmt.Println()
-			if strings.Contains(err.Error(), "AccessDenied") {
-				_, _ = commons.RED.Println(emoji.CrossMark, "Failed initializing the given directory with the following error: ")
-				fmt.Println("   Access Denied to:", dir)
-				os.Exit(1)
-			}
-			fmt.Println(err.Error())
+			terraform_utils.TerraformErrorPrettyPrint(err)
 			os.Exit(1)
 
 		}
@@ -75,50 +67,6 @@ func saveInitData() {
 	}
 }
 
-/*
-@brief: deleteInitData deletes the configuration file of the initialized folder
-@
-@params: dir - the folder to delete the init file from
-*/
-func deleteInitData(dir string) {
-	var ws workspace.Workspace
-	if utils.IsInitialized(dir) {
-		_, _ = commons.YELLOW.Println(emoji.Broom, "Cleaning up former configuration...")
-
-		err := state.Load(filepath.Join(dir, ".terrap.json"), &ws)
-		if err != nil {
-			_, _ = commons.RED.Println(err)
-			os.Exit(1)
-		}
-
-		if ws.IsTempProvider {
-			err = terraform_utils.RemoveTempTerraformExecutor(ws.ExecPath)
-			if err != nil {
-				_, _ = commons.RED.Println(err)
-				os.Exit(1)
-			}
-			_, _ = commons.YELLOW.Println(emoji.CheckMark, " Temporary Terraform executor removed")
-		}
-
-		err = os.Remove(path.Join(dir, ".terrap.json"))
-		if err != nil {
-			_, _ = commons.RED.Println(emoji.CrossMark, " Failed to clean up the current workspace.")
-			os.Exit(1)
-		}
-		_, _ = commons.YELLOW.Println(emoji.CheckMark, " Configuration file removed")
-
-		// delete Terraform files if exist
-		_ = os.Remove(path.Join(dir, ".terraform.lock.hcl"))
-		_ = os.RemoveAll(path.Join(dir, ".terraform"))
-
-		_, _ = commons.GREEN.Println("\nWorkspace removed.")
-
-	} else {
-		_, _ = commons.YELLOW.Println("The given directory is not initialized.")
-		os.Exit(0)
-	}
-}
-
 // the init command declaration
 var initCmd = &cobra.Command{
 	Use:   "init",
@@ -127,58 +75,29 @@ var initCmd = &cobra.Command{
 
 	Run: //check which flags are set and run the appropriate init
 	func(cmd *cobra.Command, args []string) {
-		if cmd.Flag("current-directory").Changed && cmd.Flag("directory").Changed {
-			_, _ = commons.YELLOW.Println("You can't set both -c and -d flags")
-			os.Exit(0)
+		if cmd.Flag("upgrade").Changed {
+			var directory string
 
-		} else if cmd.Flag("destroy").Changed {
-			if !cmd.Flag("current-directory").Changed && !cmd.Flag("directory").Changed {
-				_, _ = commons.YELLOW.Println("You must set one of the flags -c / -d")
-				os.Exit(0)
-			}
-
-			if cmd.Flag("current-directory").Changed || cmd.Flag("directory").Changed {
-				if cmd.Flag("current-directory").Changed {
-					c, _ := os.Getwd() // get current directory
-					deleteInitData(c)
-				} else {
-					deleteInitData(cmd.Flag("directory").Value.String())
-				}
-			}
-
-		} else if cmd.Flag("upgrade").Changed {
-			if !cmd.Flag("current-directory").Changed && !cmd.Flag("directory").Changed {
-				_, _ = commons.YELLOW.Println("You must set one of the flags -c / -d")
-				os.Exit(0)
-			}
-
-			if cmd.Flag("current-directory").Changed {
-				c, _ := os.Getwd() // get current directory
-				deleteInitData(c)
-				d, _ := filepath.Abs(cmd.Flag("directory").Value.String())
-				mainWorkspace.Location = d
-				terraformInit(c)
-
-				fmt.Println()
-				_, _ = commons.SIRREND.Println(emoji.BeerMug, "Terrap directory upgraded!")
+			if cmd.Flag("directory").Changed {
+				directory, _ = filepath.Abs(cmd.Flag("directory").Value.String())
 			} else {
-				d, _ := filepath.Abs(cmd.Flag("directory").Value.String())
-				deleteInitData(d)
-				mainWorkspace.Location = d
-				terraformInit(d)
-
-				fmt.Println()
-				_, _ = commons.SIRREND.Println(emoji.BeerMug, "Terrap directory upgraded!")
+				directory, _ = os.Getwd()
 			}
+
+			deleteInitData(directory)
+			mainWorkspace.Location = directory
+			terraformInit(directory)
+
+			fmt.Println()
+			_, _ = commons.SIRREND.Println(emoji.BeerMug, "Terrap directory upgraded!")
 
 		} else if cmd.Flag("directory").Changed {
 			if utils.IsDir(cmd.Flag("directory").Value.String()) {
 				cli_utils.SirrendLogoPrint()
-				fmt.Println()
 
-				d, _ := filepath.Abs(cmd.Flag("directory").Value.String())
-				mainWorkspace.Location = d
-				terraformInit(d)
+				directory, _ := filepath.Abs(cmd.Flag("directory").Value.String())
+				mainWorkspace.Location = directory
+				terraformInit(directory)
 				_, _ = commons.SIRREND.Println("\nTerrap Initialized Successfully!")
 
 			} else {
@@ -186,9 +105,8 @@ var initCmd = &cobra.Command{
 				os.Exit(0)
 			}
 
-		} else if cmd.Flag("current-directory").Changed {
+		} else {
 			cli_utils.SirrendLogoPrint()
-			fmt.Println()
 
 			location, err := os.Getwd() // get current directory
 			if err != nil {
@@ -201,8 +119,6 @@ var initCmd = &cobra.Command{
 
 			fmt.Println()
 			_, _ = commons.SIRREND.Println(emoji.BeerMug, "Terrap Initialized Successfully!")
-		} else {
-			_, _ = commons.YELLOW.Println("One of -c / -d must be set.")
 		}
 	},
 }
@@ -212,8 +128,7 @@ var initCmd = &cobra.Command{
 */
 func init() {
 	rootCmd.AddCommand(initCmd)
-	initCmd.Flags().BoolP("current-directory", "c", false, "initialize the current directory")
-	initCmd.Flags().StringP("directory", "d", "", "initialize the given directory")
-	initCmd.Flags().Bool("destroy", false, "Destroy the terrap context in this folder. Needs to be set alongside the -d or -c flag.")
-	initCmd.Flags().BoolP("upgrade", "u", false, "Upgrade the given directory init file")
+	initCmd.Flags().StringP("directory", "d", "", "initialize a given directory")
+	initCmd.Flags().Bool("destroy", false, "Destroy the terrap context in this folder.")
+	initCmd.Flags().BoolP("upgrade", "u", false, "Upgrade the given directory workspace")
 }

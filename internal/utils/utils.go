@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fatih/color"
+	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/tidwall/pretty"
 	"io"
 	"io/ioutil"
@@ -407,4 +408,19 @@ func FileExists(path string) bool {
 	}
 
 	return true
+}
+
+// PrintCharacterXTimes
+/*
+@brief:
+	PrintCharacterXTimes prints a character a specified amount of time
+@params:
+	char - string - the char to print
+	times - int - how many times to print
+*/
+func PrintCharacterXTimes(char string, times int) {
+	for i := 0; i < times; i++ {
+		commons.SIRREND.Print(char)
+	}
+	fmt.Println()
 }
