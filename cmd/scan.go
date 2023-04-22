@@ -223,7 +223,7 @@ func init() {
 	scanCmd.Flags().BoolP("provider", "p", false, "Show only provider changes.")
 	scanCmd.Flags().BoolP("data-sources", "d", false, "Show only data source changes.")
 	scanCmd.Flags().BoolP("resources", "r", false, "Show only resources changes.")
-	scanCmd.Flags().StringSlice("fixed-providers", []string{}, "A comma separated list of fixed providers written in the following format: `<provider>:<version>`.If this flag is used, all other in-context providers are ignored.")
+	scanCmd.Flags().StringSliceP("fixed-providers", "f", []string{}, "A comma separated list of fixed providers written in the following format: `<provider>:<version>`.If this flag is used, all other in-context providers are ignored.")
 
 	// extra output flags
 	scanCmd.Flags().Bool("no-safe-upgrade-message", false, "Don't print which providers are safe to upgrade.")

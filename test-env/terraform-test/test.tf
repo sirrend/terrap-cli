@@ -2,10 +2,10 @@ output "output" {
   value = "test"
 }
 
-# module "test" {
-#   source = "../terraform-backend-modules-test/test-module"
-#   name   = "testing"
-# }
+module "test" {
+  source = "../terraform-backend-modules-test/test-module"
+  name   = "testing"
+}
 
 resource "aws_s3_bucket" "fasdfasd" {
   bucket = "my-tf-test-bucket"
@@ -34,16 +34,8 @@ resource "aws_s3_bucket" "d" {
 
 resource "aws_s3_bucket" "c" {
   bucket = "my-tf-test-bucket"
-
-
 # deprecated: Use the aws_s3_bucket_accelerate_configuration resource instead.
   acceleration_status = {}
-
-# deprecated: Use the aws_s3_bucket_logging resource instead.
-  logging = {}
-
-# A new 'object_lock_enabled' attribute is now available
-  object_lock_enabled = {}
 
   tags = {
     Name        = "My bucket"

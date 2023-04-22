@@ -129,6 +129,5 @@ var initCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(initCmd)
 	initCmd.Flags().StringP("directory", "d", "", "initialize a given directory")
-	initCmd.Flags().Bool("destroy", false, "Destroy the terrap context in this folder.")
 	initCmd.Flags().BoolP("upgrade", "u", false, "Upgrade the given directory workspace")
 }
