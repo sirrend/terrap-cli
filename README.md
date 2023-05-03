@@ -43,12 +43,9 @@ Validate terrap is working by executing `terrap`.
    `cd /terraform/folder/path`</br></br>
 
 2. Initialize a new Terrap workspace where you would run terraform apply with `terrap init`.</br></br>
-
-    <div style="border-left: 4px solid #5C37B2; padding-left: 10px;">
     <strong>Important!</strong> </br>
     As Terrap runs <code>terraform init</code> under the hood, it would need every configuration component you normally use when executing <code>terraform init</code>.</br>
     It can be environment variables, the <code style="color: #5C37B2">.aws/credentials</code> file, etc.
-    </div></br>
 
 
 3. Scan your workspace with: `terrap scan`
