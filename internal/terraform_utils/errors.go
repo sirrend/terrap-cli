@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-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
-
 type TerraformError struct {
 	reason      string
 	description string
