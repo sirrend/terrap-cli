@@ -22,13 +22,27 @@ builds:
         - -X "github.com/sirrend/terrap-cli/internal/version.Version=${TERRAP_VERSION}"
 
 release:
-  prerelease: auto
-  github:
-      owner: sirrend
-      name: homebrew-sirrend
+    prerelease: auto
+    github:
+        owner: sirrend
+        name: terrap-cli
 
 universal_binaries:
-  - replace: true
+  - id: terrap
+    replace: true
+
+brews:
+  - name: terrap
+    homepage: "https://github.com/sirrend/terrap-cli.git"
+    description: "CLI utility for finding any change between Terraform schemas"
+    license: "Apache2.0"
+    tap:
+        name: homebrew-sirrend
+        owner: sirrend
+        branch: main
+    commit_author:
+      name: TerrapCI
+      email: terrapci@sirrend.com
 
 checksum:
   name_template: 'checksums.txt'
