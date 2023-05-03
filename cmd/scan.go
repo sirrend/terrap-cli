@@ -136,7 +136,7 @@ var scanCmd = &cobra.Command{
 
 							} else {
 								if len(asText) > 0 {
-									_, _ = commons.SIRREND.Println("File:", utils.GetAbsPath(file))
+									_, _ = commons.SIRREND.Println("* File:", utils.GetAbsPath(file))
 								}
 
 								for _, appliedRules := range asText {

@@ -36,6 +36,11 @@ universal_binaries:
   - id: terrap
     replace: true
 
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+
 brews:
   - name: terrap
     homepage: "https://github.com/sirrend/terrap-cli.git"

@@ -101,20 +101,20 @@ func (r Rule) IsNew() bool {
 	PrettyPrint prints the Rule object
 */
 func (r Rule) PrettyPrint() {
-	_, _ = commons.YELLOW.Print("    Change Path: ")
+	_, _ = commons.YELLOW.Print("      Change Path: ")
 	fmt.Println(r.Path)
 
-	_, _ = commons.YELLOW.Print("    Operation: ")
+	_, _ = commons.YELLOW.Print("      Operation: ")
 	fmt.Println(r.Operation)
 
-	_, _ = commons.YELLOW.Print("    Is This Component Required: ")
+	_, _ = commons.YELLOW.Print("      Is This Component Required: ")
 	fmt.Println(r.Required)
 
-	_, _ = commons.YELLOW.Print("    Change: ")
+	_, _ = commons.YELLOW.Print("      Change: ")
 	fmt.Println(r.Notification)
 
 	if r.URL != "" {
-		_, _ = commons.YELLOW.Print("    Documentation: ")
+		_, _ = commons.YELLOW.Print("      Documentation: ")
 		fmt.Println(r.URL, "\n")
 	}
 }

@@ -38,9 +38,9 @@ func (r RuleSet) GetNewComponents() []string {
 */
 func (r RuleSet) PrettyPrint(rules []Rule) {
 	if r.Rules != nil {
-		_, _ = commons.GREEN.Print("Resource Name: ")
+		_, _ = commons.GREEN.Print("- Resource Name: ")
 		fmt.Println(r.ResourceName)
-		fmt.Println("  Changes:")
+		fmt.Println("    Changes:")
 
 		for _, rule := range rules {
 			rule.PrettyPrint()

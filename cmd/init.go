@@ -8,7 +8,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/enescakir/emoji"
-	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/terraform_utils"
@@ -93,8 +92,6 @@ var initCmd = &cobra.Command{
 
 		} else if cmd.Flag("directory").Changed {
 			if utils.IsDir(cmd.Flag("directory").Value.String()) {
-				cli_utils.SirrendLogoPrint()
-
 				directory, _ := filepath.Abs(cmd.Flag("directory").Value.String())
 				mainWorkspace.Location = directory
 				terraformInit(directory)
@@ -106,8 +103,6 @@ var initCmd = &cobra.Command{
 			}
 
 		} else {
-			cli_utils.SirrendLogoPrint()
-
 			location, err := os.Getwd() // get current directory
 			if err != nil {
 				_, _ = commons.RED.Print(emoji.AngryFace, "Failed with the following error: ")
