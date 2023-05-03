@@ -18,9 +18,8 @@ universal_binaries:
   - replace: true
 
 brews:
-  -
-    name: terrap
-    homepage: "https://github.com/sirrend/homebrew-sirrend.git"
+  - name: terrap
+    homepage: "https://github.com/sirrend/terrap-cli.git"
     tap:
       owner: sirrend
       name: homebrew-sirrend
