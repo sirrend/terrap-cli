@@ -40,12 +40,12 @@ Validate terrap is working by executing `terrap`.
 
 ### Initialize my First Workspace
 1. `CD` to the local Terraform folder you want to work with.</br>
-   `cd /terraform/folder/path`</br></br>
+   `cd < /terraform/folder/path >`</br></br>
 
 2. Initialize a new Terrap workspace where you would run terraform apply with `terrap init`.</br></br>
     <strong>Important!</strong> </br>
-    As Terrap runs <code>terraform init</code> under the hood, it would need every configuration component you normally use when executing <code>terraform init</code>.</br>
-    It can be environment variables, the <code style="color: #5C37B2">.aws/credentials</code> file, etc.
+    As Terrap runs <code>terraform init</code> under the hood, it would need every configuration component you normally use when executing the command.</br>
+    It can be environment variables, the <code>.aws/credentials</code> file, etc.
 
 
 3. Scan your workspace with: `terrap scan`
