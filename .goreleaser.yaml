@@ -16,7 +16,7 @@ builds:
     env:
         - TERRAP_VERSION=$(grep '# version' version.md | cut -d ' ' -f3)
         - CGO_ENABLED=0
-        -
+
     ldflags:
         - -X "github.com/sirrend/terrap-cli/internal/version.Version=${TERRAP_VERSION}"
 
