@@ -42,7 +42,7 @@ Validate terrap is working by executing `terrap`.
 1. `CD` to the local Terraform folder you want to work with.</br>
    `cd /terraform/folder/path`</br></br>
 
-2. Initialize a new Terrap workspace where you would run `terraform apply` with `terrap init` -> <a href="https://sirrend.github.io/terrap-docs/init">init</a>.</br></br>
+2. Initialize a new Terrap workspace where you would run terraform apply with `terrap init`.</br></br>
 
     <div style="border-left: 4px solid #5C37B2; padding-left: 10px;">
     <strong>Important!</strong> </br>
