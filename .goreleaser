@@ -23,19 +23,12 @@ builds:
 
 release:
   prerelease: auto
+  github:
+      owner: sirrend
+      name: homebrew-sirrend
 
 universal_binaries:
   - replace: true
-
-brews:
-  - name: terrap
-    homepage: "https://github.com/sirrend/terrap-cli.git"
-    tap:
-      owner: sirrend
-      name: homebrew-sirrend
-    commit_author:
-      name: TerrapCI
-      email: terrapci@sirrend.com
 
 checksum:
   name_template: 'checksums.txt'
