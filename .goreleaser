@@ -23,6 +23,7 @@ builds:
 
 release:
     prerelease: auto
+    mode: replace
     github:
         owner: sirrend
         name: terrap-cli
