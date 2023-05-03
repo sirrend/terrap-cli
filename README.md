@@ -62,7 +62,7 @@ Validate terrap is working by executing `terrap`.
 
 3. Scan your workspace with: `terrap scan`
 
-https://user-images.githubusercontent.com/47568615/232331582-998cb9dc-4ad4-465e-af31-4fab0c77877b.mov
+https://user-images.githubusercontent.com/47568615/236044850-3473952a-4169-4d63-beb7-cf1664afc35a.mov
 
 ## Features 🚀
 ### Scan for changes with `scan`
