@@ -200,7 +200,7 @@ var scanCmd = &cobra.Command{
 			if !cmd.Flag("no-not-supported-message").Changed && !cmd.Flag("no-messages").Changed {
 				if notYetSupportedMessage != "" {
 					message := strings.TrimLeft(notYetSupportedMessage, ", ")
-					_, _ = commons.SIRREND.Print("The following providers are not yet supported: ")
+					_, _ = commons.SIRREND.Print("The following providers and corresponding versions are not yet supported by terrap: ")
 					fmt.Println(message, emoji.CryingFace.String())
 					_, _ = commons.SIRREND.Print("Check again soon! ")
 					fmt.Println("We're actively working on increasing our Providers support " + emoji.BuildingConstruction.String())

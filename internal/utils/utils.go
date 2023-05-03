@@ -438,26 +438,3 @@ func RemoveLastDot(s string) string {
 	}
 	return s[:len(s)-1]
 }
-
-// DoesEndWithDot
-/*
-@brief:
-	DoesEndWithDot checks if a strings ends with a dot
-@params:
-	bool - true if it does, otherwise false
-*/
-func DoesEndWithDot(s string) bool {
-	if len(s) == 0 || s[len(s)-1] != '.' {
-		return false
-	}
-	return true
-}
-
-// Helper function to repeat a character n times
-func Repeat(char string, n int) string {
-	result := ""
-	for i := 0; i < n; i++ {
-		result += char
-	}
-	return result
-}

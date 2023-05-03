@@ -50,7 +50,7 @@ func GetRules(provider, sourceVersion string) (Rulebook, error) {
 
 	container, _ := gabs.ParseJSON(body)
 	if container.ExistsP("error") {
-		return rulebook, errors.New(utils.StripProviderPrefix(provider))
+		return rulebook, errors.New(utils.StripProviderPrefix(provider) + ":" + rulebook.TargetVersion)
 	}
 
 	return rulebook, nil
