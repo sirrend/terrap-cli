@@ -3,13 +3,23 @@ builds:
     goos:
       - darwin
       - linux
+      - windows
+
     goarch:
       - amd64
       - arm64
+      - arm
+
     env:
       - CGO_ENABLED=0
+
     flags:
       - -mod=vendor
+
+    env:
+        - TERRAP_VERSION=$(grep '# version' version.md | cut -d ' ' -f3)
+    ldflags:
+        - -X "github.com/sirrend/terrap-cli/internal/version.Version=${TERRAP_VERSION}"
 
 release:
   prerelease: auto
