@@ -1,0 +1,32 @@
+builds:
+  - binary: terrap
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -mod=vendor
+
+release:
+  prerelease: auto
+
+universal_binaries:
+  - replace: true
+
+brews:
+  -
+    name: terrap
+    homepage: "https://github.com/sirrend/homebrew-sirrend.git"
+    tap:
+      owner: sirrend
+      name: homebrew-sirrend
+    commit_author:
+      name: TerrapCI
+      email: terrapci@sirrend.com
+
+checksum:
+  name_template: 'checksums.txt'

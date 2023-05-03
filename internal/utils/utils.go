@@ -424,3 +424,40 @@ func PrintCharacterXTimes(char string, times int) {
 	}
 	fmt.Println()
 }
+
+// RemoveLastDot
+/*
+@brief:
+	RemoveLastDot removed the last dot form a sentence
+@params:
+	s - string - the removed dot sentence
+*/
+func RemoveLastDot(s string) string {
+	if len(s) == 0 || s[len(s)-1] != '.' {
+		return s
+	}
+	return s[:len(s)-1]
+}
+
+// DoesEndWithDot
+/*
+@brief:
+	DoesEndWithDot checks if a strings ends with a dot
+@params:
+	bool - true if it does, otherwise false
+*/
+func DoesEndWithDot(s string) bool {
+	if len(s) == 0 || s[len(s)-1] != '.' {
+		return false
+	}
+	return true
+}
+
+// Helper function to repeat a character n times
+func Repeat(char string, n int) string {
+	result := ""
+	for i := 0; i < n; i++ {
+		result += char
+	}
+	return result
+}
