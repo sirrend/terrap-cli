@@ -16,8 +16,17 @@ The tool offers clear and actionable notifications, helping you streamline the u
 ## Good To Know 💡
 Terrap decides which Terraform version to use in the following order:
 1. The latest installed Terraform version found locally.
-2. If the `TERRAP_TERRAFORM_VERSION` environment variable is set, Terrap will use the version specified as long as it matches the `>=0.13` constraint.
-3. If none of the above is applicable, Terrap will download the latest available version.
+2. If the `TERRAP_TERRAFORM_VERSION` environment variable is set, Terrap will use the version specified as long as it matches the `>=0.13` constraint.</br>
+    Set environment variable on mac/linux:</br>
+    ```shell
+   export <var>=<value>
+   ```
+   Set environment variable on windows:</br>
+    ```shell
+   $Env:TERRAP_TERRAFORM_VERSION = "0.13"
+   ```
+   
+4. If none of the above is applicable, Terrap will download the latest available version.
 
 ## How to Download ⬇️
 ### Clone sirrend/terrap-cli
