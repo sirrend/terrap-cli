@@ -50,6 +50,7 @@ func terraformInit(dir string) {
 
 	} else {
 		_, _ = commons.YELLOW.Println("Folder already initialized..")
+		_, _ = commons.YELLOW.Println("You may use `terrap init -u` to upgrade your context.")
 		os.Exit(0)
 
 	}
