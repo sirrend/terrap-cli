@@ -17,7 +17,7 @@ Terrap decides which Terraform version to use in the following order:
 3. If none of the above is applicable, Terrap will download the latest available version.
 
 ## How to Download ⬇️
-#### Clone sirrend/terrap-cli
+### Clone sirrend/terrap-cli
 ```shell
 git clone https://github.com/sirrend/terrap-cli
 cd terrap-cli
@@ -28,16 +28,30 @@ chmod +x terrap
 mv terrap /usr/local/bin/
 ```
 
-#### Brew
+### Brew
 ```shell
-brew install terrap-cli
+brew tap sirrend/sirrend
+brew install terrap
 ```
 
+Validate terrap is working by executing `terrap`.
+
 ## Quick Start ⏩
-1. Go to your local IaC repository folder.
-2. Initialize a new terrap workspace where you would run `terraform apply` with `terrap init`.
+
+### Initialize my First Workspace
+1. `CD` to the local Terraform folder you want to work with.</br>
+   `cd /terraform/folder/path`</br></br>
+
+2. Initialize a new Terrap workspace where you would run `terraform apply` with `terrap init` -> <a href="https://sirrend.github.io/terrap-docs/init">init</a>.</br></br>
+
+    <div style="border-left: 4px solid #5C37B2; padding-left: 10px;">
+    <strong>Important!</strong> </br>
+    As Terrap runs <code>terraform init</code> under the hood, it would need every configuration component you normally use when executing <code>terraform init</code>.</br>
+    It can be environment variables, the <code style="color: #5C37B2">.aws/credentials</code> file, etc.
+    </div></br>
+
+
 3. Scan your workspace with: `terrap scan`
-</br>
 
 https://user-images.githubusercontent.com/47568615/232331582-998cb9dc-4ad4-465e-af31-4fab0c77877b.mov
 
