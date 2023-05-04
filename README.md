@@ -42,7 +42,7 @@ mv terrap /usr/local/bin/
 
 ### Brew
 ```shell
-brew tap sirrend/sirrend
+brew tap sirrend/products
 brew install terrap
 ```
 

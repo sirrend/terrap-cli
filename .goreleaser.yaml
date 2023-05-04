@@ -46,7 +46,7 @@ brews:
     description: "CLI utility for finding any change between Terraform schemas"
     license: "Apache2.0"
     tap:
-        name: homebrew-sirrend
+        name: homebrew-products
         owner: sirrend
         branch: main
     commit_author:
