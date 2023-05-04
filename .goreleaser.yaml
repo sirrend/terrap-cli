@@ -4,7 +4,7 @@ before:
     - go mod vendor
 
 builds:
-  - binary: terrap@{{ .Major }}.{{ .Minor }}.{{ .Patch }}
+  - binary: terrap
     goos:
       - darwin
       - linux
@@ -19,17 +19,17 @@ builds:
       - -mod=vendor
 
     env:
-        - CGO_ENABLED=0
+      - CGO_ENABLED=0
 
     ldflags:
-        - -X "github.com/sirrend/terrap-cli/internal/version.Version={{.Tag}}"
+      - -X github.com/sirrend/terrap-cli/internal/version.Version={{.Tag}}
 
 release:
-    prerelease: auto
-    mode: append
-    github:
-        owner: sirrend
-        name: terrap-cli
+  prerelease: auto
+  mode: replace
+  github:
+    owner: sirrend
+    name: terrap-cli
 
 universal_binaries:
   - id: terrap
@@ -41,14 +41,28 @@ archives:
         format: zip
 
 brews:
-  - name: terrap
+  - name: "terrap@{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
     homepage: "https://github.com/sirrend/terrap-cli.git"
     description: "CLI utility for finding any change between Terraform schemas"
     license: "Apache2.0"
     tap:
-        name: homebrew-products
-        owner: sirrend
-        branch: main
+      name: homebrew-products
+      owner: sirrend
+      branch: main
+
+    commit_author:
+      name: TerrapCI
+      email: terrapci@sirrend.com
+
+  - name: terrap # latest
+    homepage: "https://github.com/sirrend/terrap-cli.git"
+    description: "CLI utility for finding any change between Terraform schemas"
+    license: "Apache2.0"
+    tap:
+      name: homebrew-products
+      owner: sirrend
+      branch: main
+
     commit_author:
       name: TerrapCI
       email: terrapci@sirrend.com
