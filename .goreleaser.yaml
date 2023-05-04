@@ -4,7 +4,7 @@ before:
     - go mod vendor
 
 builds:
-  - binary: terrap
+  - binary: terrap@{{ .Major }}.{{ .Minor }}.{{ .Patch }}
     goos:
       - darwin
       - linux
