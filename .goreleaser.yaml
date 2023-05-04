@@ -19,7 +19,7 @@ builds:
       - -mod=vendor
 
     env:
-        - TERRAP_VERSION="${GITHUB_REF#refs/*/}"
+        - TERRAP_VERSION=${GITHUB_REF#refs/*/}
         - CGO_ENABLED=0
 
     ldflags:
