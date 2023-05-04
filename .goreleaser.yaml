@@ -19,11 +19,10 @@ builds:
       - -mod=vendor
 
     env:
-        - TERRAP_VERSION=${GITHUB_REF#refs/*/}
         - CGO_ENABLED=0
 
     ldflags:
-        - -X "github.com/sirrend/terrap-cli/internal/version.Version={{.Env.TERRAP_VERSION}}"
+        - -X "github.com/sirrend/terrap-cli/internal/version.Version={{.Tag}}"
 
 release:
     prerelease: auto
