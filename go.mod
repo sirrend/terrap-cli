@@ -15,6 +15,7 @@ require (
 	github.com/hashicorp/terraform v1.4.2
 	github.com/hashicorp/terraform-config-inspect v0.0.0-20230313152339-7c9946b1df49
 	github.com/hashicorp/terraform-exec v0.18.1
+	github.com/ktr0731/go-updater v0.1.6
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
@@ -35,8 +36,10 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.17 // indirect
+	github.com/mattn/go-pipeline v0.0.0-20170920030317-cfb87a531e2b // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/zclconf/go-cty v1.13.0 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
