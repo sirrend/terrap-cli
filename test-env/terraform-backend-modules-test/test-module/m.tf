@@ -8,8 +8,8 @@ resource "aws_s3_bucket_logging" "testlog" {
   target_prefix = ""
 }
 
-module "module_example_complete" {
-  source  = "cloudposse/module/example//examples/complete"
-  version = "1.0.0"
-  # insert the 15 required variables here
-}
+# module "module_example_complete" {
+#   source  = "cloudposse/module/example//examples/complete"
+#   version = "1.0.0"
+#   # insert the 15 required variables here
+# }

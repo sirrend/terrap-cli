@@ -11,7 +11,7 @@ type TerrapVersion struct {
 	System    string
 }
 
-var Version = "filled on build"
+var Version = "0.0.3" // changes on build
 
 func (t *TerrapVersion) SetVersion() {
 	(*t).Product = "Terrap"

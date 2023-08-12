@@ -16,6 +16,9 @@ var (
 	RED         = color.New(color.FgRed)
 	SIRREND     = color.New(color.FgHiMagenta)
 	HighMagenta = color.New(color.FgMagenta)
+
+	BrewFormula     = "sirrend/products"
+	BrewProductName = "terrap"
 )
 
 func getUserHomeDir() string {
