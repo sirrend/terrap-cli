@@ -1,12 +1,13 @@
 package config
 
 import (
-	"github.com/fatih/color"
-	"github.com/sirrend/terrap-cli/internal/state"
-	"github.com/sirrend/terrap-cli/internal/utils"
 	"log"
 	"os"
 	"path"
+
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/state"
+	"github.com/sirrend/terrap-cli/internal/utils"
 )
 
 // struct to hold all the cli tool configuration parameters
@@ -24,8 +25,7 @@ var c config
 */
 
 func PrintNotConfiguredMessage() {
-	yellow := color.New(color.FgYellow)
-	_, _ = yellow.Println("Hmm..seems like you didn't configure Terrap yet\nPlease execute < terrap config >.")
+	_, _ = commons.YELLOW.Println("Hmm..seems like you didn't configure Terrap yet.\nPlease execute < terrap config >.")
 }
 
 /*
