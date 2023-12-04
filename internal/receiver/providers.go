@@ -1,11 +1,12 @@
-package providers_api
+package receiver
 
 import (
 	"errors"
+
 	"github.com/Jeffail/gabs"
 	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/requests"
 	"github.com/sirrend/terrap-cli/internal/utils"
-	"net/http"
 )
 
 // Provider represents a provider fetched from the API and all it's attributes
@@ -27,11 +28,7 @@ func GetSupportedProviders() ([]Provider, error) {
 	var parsedProviders []Provider
 
 	// Prepare the method
-	req, _ := http.NewRequest("GET", commons.ProviderAPI, nil)
-
-	// perform the request
-	client := &http.Client{}
-	res, err := client.Do(req)
+	res, err := requests.PerformRequest("GET", commons.ProviderAPI, nil)
 	if err != nil {
 		return []Provider{}, err
 	}
@@ -41,17 +38,20 @@ func GetSupportedProviders() ([]Provider, error) {
 
 	container, _ := gabs.ParseJSON(body)
 	if container.ExistsP("error") {
-		return []Provider{}, errors.New("Oops.. something went wrong on out side. But rest asure we are on it!")
+		return []Provider{}, errors.New("oops.. something went wrong on our side. But rest asure we are on it")
 	}
 
 	providers, _ := container.Path("providers").Children()
 	for _, provider := range providers {
-		p := Provider{
-			Name:       utils.MustUnquote(provider.Path("provider").String()),
-			MinVersion: utils.MustUnquote(provider.Path("min_version").String()),
-			MaxVersion: utils.MustUnquote(provider.Path("max_version").String()),
+		unquote := func(param string) string {
+			return utils.MustUnquote(provider.Path(param).String())
 		}
-		parsedProviders = append(parsedProviders, p)
+
+		parsedProviders = append(parsedProviders, Provider{
+			Name:       unquote("provider"),
+			MinVersion: unquote("min_version"),
+			MaxVersion: unquote("max_version"),
+		})
 	}
 
 	return parsedProviders, nil

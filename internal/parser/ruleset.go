@@ -1,7 +1,8 @@
-package rules_api
+package parser
 
 import (
 	"fmt"
+
 	"github.com/sirrend/terrap-cli/internal/commons"
 )
 

@@ -1,12 +1,13 @@
-package rules_api
+package parser
 
 import (
 	"bufio"
 	"fmt"
-	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/sirrend/terrap-cli/internal/utils"
 	"os"
 	"strings"
+
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/utils"
 )
 
 // Rule holds all needed attribute from a parsed rule
@@ -101,21 +102,18 @@ func (r Rule) IsNew() bool {
 	PrettyPrint prints the Rule object
 */
 func (r Rule) PrettyPrint() {
-	_, _ = commons.YELLOW.Print("      Change Path: ")
-	fmt.Println(r.Path)
+	printField := func(fieldName string, fieldValue interface{}) {
+		_, _ = commons.YELLOW.Print("      " + fieldName + ": ")
+		fmt.Println(fieldValue)
+	}
 
-	_, _ = commons.YELLOW.Print("      Operation: ")
-	fmt.Println(r.Operation)
-
-	_, _ = commons.YELLOW.Print("      Is This Component Required: ")
-	fmt.Println(r.Required)
-
-	_, _ = commons.YELLOW.Print("      Change: ")
-	fmt.Println(r.Notification)
+	printField("Change Path", r.Path)
+	printField("Operation", r.Operation)
+	printField("Is This Component Required", r.Required)
+	printField("Change", r.Notification)
 
 	if r.URL != "" {
-		_, _ = commons.YELLOW.Print("      Documentation: ")
-		fmt.Println(r.URL, "\n")
+		printField("Documentation", r.URL+"\n")
 	}
 }
 
@@ -125,13 +123,16 @@ func (r Rule) PrettyPrint() {
 	PrettyPrintWhatsNew prints the Rule object if new
 */
 func (r Rule) PrettyPrintWhatsNew() {
+	printField := func(fieldName string, fieldValue interface{}) {
+		_, _ = commons.YELLOW.Print("    " + fieldName + ": ")
+		fmt.Println(fieldValue)
+	}
 	if r.IsNew() {
-		_, _ = commons.YELLOW.Print("    Addition: ")
-		fmt.Println(r.Notification)
+		printField("Addition", r.Notification)
 
 		if r.URL != "" {
-			_, _ = commons.YELLOW.Print("    Docs: ")
-			fmt.Println(r.URL, "\n")
+			printField("Docs", r.URL)
+			fmt.Printf("\n")
 		}
 	}
 }
@@ -163,7 +164,7 @@ func (r Rule) IsParameterChange() bool {
 	}
 
 	for _, parameter := range parameters {
-		if strings.ToLower(parameter) == strings.ToLower(r.ComponentName) {
+		if strings.EqualFold(parameter, r.ComponentName) {
 			return true
 		}
 	}

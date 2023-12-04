@@ -6,18 +6,19 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
 	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/files_handler"
-	"github.com/sirrend/terrap-cli/internal/rules_api"
+	"github.com/sirrend/terrap-cli/internal/receiver"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
-	"os"
-	"strings"
 )
 
 // whatsNewCmd represents the whatsNew command
@@ -40,7 +41,7 @@ var whatsNewCmd = &cobra.Command{
 			}
 
 			for provider, version := range workspace.Providers { // go over every provider in user's folder
-				rulebook, err := rules_api.GetRules(provider, version.String())
+				rulebook, err := receiver.GetRules(provider, version.String())
 				// validate rulebook downloaded
 				if err != nil {
 					if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {

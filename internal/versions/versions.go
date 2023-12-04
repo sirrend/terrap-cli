@@ -13,13 +13,14 @@ type SemverVersion struct {
 func (v *SemverVersion) Init(ver string) bool {
 	if validate.IsValid(ver) {
 		parsed := semver.MustParse(ver)
-		v.Version = parsed
-		v.Major = parsed.Major()
-		v.Minor = parsed.Minor()
-		v.Patch = parsed.Patch()
+		*v = SemverVersion{
+			Version: parsed,
+			Major:   parsed.Major(),
+			Minor:   parsed.Minor(),
+			Patch:   parsed.Patch(),
+		}
 		return true
 	}
-
 	return false
 }
 
@@ -32,15 +33,10 @@ func (v *SemverVersion) Init(ver string) bool {
 */
 
 func (v *SemverVersion) IsOlderThen(new string) bool {
-	// validate version are indeed in semver format
 	if validate.IsValid(new) {
 		newVer := semver.MustParse(new)
 
-		if v.Version.LessThan(newVer) {
-			return true
-		}
-
-		return false
+		return v.Version.LessThan(newVer)
 	}
 
 	return false
@@ -55,15 +51,10 @@ func (v *SemverVersion) IsOlderThen(new string) bool {
 */
 
 func (v *SemverVersion) IsNewerThen(new string) bool {
-	// validate version are indeed in semver format
 	if validate.IsValid(new) {
 		newVer := semver.MustParse(new)
 
-		if v.Version.GreaterThan(newVer) {
-			return true
-		}
-
-		return false
+		return v.Version.GreaterThan(newVer)
 	}
 
 	return false

@@ -6,11 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/fatih/color"
-	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/tidwall/pretty"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -18,6 +14,10 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+
+	"github.com/fatih/color"
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/tidwall/pretty"
 )
 
 /*
@@ -57,7 +57,7 @@ func GetFileContentAsBytes(path string) ([]byte, error) {
 			}
 		}(jsonFile)
 
-		byteValue, _ := ioutil.ReadAll(jsonFile)
+		byteValue, _ := io.ReadAll(jsonFile)
 
 		return byteValue, nil
 	}
@@ -250,7 +250,7 @@ func GetCodeUntilMatchingBrace(input string) string {
 	string - the first key, or "" if empty
 */
 func GetFirstKeyInMap(m map[string]interface{}) string {
-	for key, _ := range m {
+	for key := range m {
 		return key
 	}
 
@@ -315,11 +315,7 @@ func StripProviderPrefix(provider string) string {
 */
 func IsHiddenObject(path string) bool {
 	path = GetFileName(path)
-	if strings.HasPrefix(path, ".") {
-		return true
-	}
-
-	return false
+	return strings.HasPrefix(path, ".")
 }
 
 // IsHiddenPath
@@ -332,11 +328,7 @@ func IsHiddenObject(path string) bool {
 	bool - true if hidden, otherwise false
 */
 func IsHiddenPath(path string) bool {
-	if strings.HasPrefix(path, ".") {
-		return true
-	}
-
-	return false
+	return strings.HasPrefix(path, ".")
 }
 
 // GetFileName
@@ -403,11 +395,7 @@ func ContainsNonNumeric(s string) bool {
 */
 func FileExists(path string) bool {
 	_, err := os.Stat(path)
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 // PrintCharacterXTimes

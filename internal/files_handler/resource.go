@@ -1,9 +1,11 @@
 package files_handler
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
-	"github.com/sirrend/terrap-cli/internal/rules_api"
+	"github.com/sirrend/terrap-cli/internal/parser"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/spf13/cast"
 )
@@ -17,6 +19,7 @@ type Resource struct {
 	Provider         tfconfig.ProviderRef
 	Pos              tfconfig.SourcePos
 	Attributes       []Attribute
+	BlockTypes       []Block
 }
 
 // Init
@@ -33,8 +36,10 @@ func (r *Resource) Init(block *hclwrite.Block, metadata *tfconfig.Resource) {
 	r.Alias = block.Labels()[1]
 	r.Pos = metadata.Pos
 	r.Provider = metadata.Provider
-	r.FullNameSequence = r.Type + "." + r.Name + "." + r.Alias
+	r.FullNameSequence = fmt.Sprintf("%s.%s.%s", r.Type, r.Name, r.Alias)
+
 	r.analyzeAttributes(block) // fill the attributes slice
+	r.analyzeBlockTypes(block) // fill the blocks slice
 }
 
 // GetAttributesKeys
@@ -68,6 +73,22 @@ func (r *Resource) analyzeAttributes(block *hclwrite.Block) {
 	}
 }
 
+// analyzeBlockTypes
+/*
+@brief:
+	analyzeAttributes initializes all the attributes found under the given block
+@params:
+	block - *hclwrite.Block - the block to inspect
+*/
+func (r *Resource) analyzeBlockTypes(block *hclwrite.Block) {
+	blockHolder := Block{}
+
+	for _, block := range block.Body().Blocks() {
+		blockHolder.Init(block, block.Type())
+		r.BlockTypes = append(r.BlockTypes, blockHolder)
+	}
+}
+
 // IsDataSource
 /*
 @brief:
@@ -76,11 +97,7 @@ func (r *Resource) analyzeAttributes(block *hclwrite.Block) {
 	bool
 */
 func (r Resource) IsDataSource() bool {
-	if r.Type == "data" {
-		return true
-	}
-
-	return false
+	return r.Type == "data"
 }
 
 // IsResource
@@ -91,11 +108,7 @@ func (r Resource) IsDataSource() bool {
 	bool
 */
 func (r Resource) IsResource() bool {
-	if r.Type == "resource" {
-		return true
-	}
-
-	return false
+	return r.Type == "resource"
 }
 
 // GetRuleset
@@ -109,8 +122,8 @@ func (r Resource) IsResource() bool {
 	*gabs.Container - the ruleset to execute
 	error - if exists
 */
-func (r Resource) GetRuleset(rulebook rules_api.Rulebook, appearances map[string][]string) (rulesetObj rules_api.RuleSet, err error) {
-	var rules []rules_api.Rule
+func (r Resource) GetRuleset(rulebook parser.Rulebook, appearances map[string][]string) (rulesetObj parser.RuleSet, err error) {
+	var rules []parser.Rule
 
 	if ruleset, err := rulebook.GetRuleSetByResource(r.Name, r.Type); err == nil {
 		if ruleset != nil {
@@ -118,7 +131,7 @@ func (r Resource) GetRuleset(rulebook rules_api.Rulebook, appearances map[string
 				for _, component := range components {
 					if rulesSlice, err := component.Children(); err == nil {
 						for _, rule := range rulesSlice {
-							rules = append(rules, rules_api.Rule{
+							rules = append(rules, parser.Rule{
 								Path:          utils.MustUnquote(rule.Path("HumanReadablePath").String()),
 								Operation:     utils.MustUnquote(rule.Path("Operation").String()),
 								ComponentName: utils.MustUnquote(rule.Path("AttributeKey").String()),
@@ -132,7 +145,7 @@ func (r Resource) GetRuleset(rulebook rules_api.Rulebook, appearances map[string
 				}
 			}
 
-			rulesetObj = rules_api.RuleSet{
+			rulesetObj = parser.RuleSet{
 				ResourceName: r.Name,
 				Appearances:  appearances[r.Name],
 				Rules:        rules,

@@ -6,20 +6,22 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
 	"github.com/sirrend/terrap-cli/internal/annotate"
 	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/files_handler"
-	"github.com/sirrend/terrap-cli/internal/rules_api"
+	"github.com/sirrend/terrap-cli/internal/parser"
+	"github.com/sirrend/terrap-cli/internal/receiver"
 	"github.com/sirrend/terrap-cli/internal/scanning"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
-	"os"
-	"strings"
 )
 
 var (
@@ -30,8 +32,8 @@ var (
 
 // appliedRules is used to keep track of the rules applied in context
 type appliedRules struct {
-	ruleSet rules_api.RuleSet
-	rules   []rules_api.Rule
+	ruleSet parser.RuleSet
+	rules   []parser.Rule
 }
 
 // scanCmd represents the scan command
@@ -42,7 +44,7 @@ var scanCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var workspace workspace.Workspace
 		var asText []appliedRules
-		asJson := map[string][]rules_api.Rule{}
+		asJson := map[string][]parser.Rule{}
 
 		providersSet := cmd.Flag("fixed-providers").Changed
 		if utils.IsInitialized(".") || providersSet {
@@ -65,7 +67,7 @@ var scanCmd = &cobra.Command{
 			if len(workspace.Providers) > 0 {
 
 				for provider, version := range workspace.Providers {
-					rulebook, err := rules_api.GetRules(provider, version.String())
+					rulebook, err := receiver.GetRules(provider, version.String())
 					// validate rulebook downloaded
 					if err != nil {
 						if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {
@@ -105,7 +107,7 @@ var scanCmd = &cobra.Command{
 										// combine ruleSets with applied rules
 									} else {
 										if ruleset.Rules != nil {
-											var rules []rules_api.Rule
+											var rules []parser.Rule
 											for _, rule := range ruleset.Rules {
 												if apply, err := rule.DoesRuleApplyInContext(file, resource.Name, resource.Type); err == nil && apply {
 													rules = append(rules, rule)
@@ -132,7 +134,7 @@ var scanCmd = &cobra.Command{
 									utils.PrettyPrintStruct(map[string]interface{}{file: asJson})
 								}
 
-								asJson = map[string][]rules_api.Rule{} // reset for next provider
+								asJson = map[string][]parser.Rule{} // reset for next provider
 
 							} else {
 								if len(asText) > 0 {
