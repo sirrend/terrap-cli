@@ -61,7 +61,7 @@ var whatsNewCmd = &cobra.Command{
 				flags := cli_utils.ChangedComponentsFlags(*cmd) // get resources filtering
 				for resourcesType, resources := range ruleSets {
 					if utils.IsItemInSlice(resourcesType, flags) {
-						for resourceName, _ := range resources.(map[string]interface{}) { // go over all ruleSets
+						for resourceName := range resources.(map[string]interface{}) { // go over all ruleSets
 							resource := files_handler.Resource{Name: resourceName, Type: resourcesType}
 							ruleset, err := resource.GetRuleset(rulebook, nil)
 							if err != nil {
