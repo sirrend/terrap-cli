@@ -5,10 +5,11 @@ Copyright © 2023 Sirrend
 package cmd
 
 import (
-	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/sirrend/terrap-cli/internal/github_issue"
-	"github.com/spf13/cobra"
 	"os"
+
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/github"
+	"github.com/spf13/cobra"
 )
 
 // createIssue
@@ -22,9 +23,9 @@ import (
 	isFeature - bool - is a feature request
 */
 func createIssue(token, title, description string, isFeature bool) {
-	issue, err := github_issue.OpenIssue(token, title, description, isFeature)
+	issue, err := github.OpenIssue(token, title, description, isFeature)
 	if err != nil {
-		if _, ok := err.(*github_issue.RateError); ok {
+		if _, ok := err.(*github.RateError); ok {
 			_, _ = commons.YELLOW.Println(err.Error())
 			os.Exit(0)
 		}

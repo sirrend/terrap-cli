@@ -11,12 +11,12 @@ import (
 
 	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
-	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/files_handler"
 	"github.com/sirrend/terrap-cli/internal/receiver"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/utils/cli"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +37,7 @@ var whatsNewCmd = &cobra.Command{
 					_, _ = commons.RED.Println(err)
 				}
 			} else {
-				workspace = cli_utils.GetFixedProvidersFlag(*cmd)
+				workspace = cli.GetFixedProvidersFlag(*cmd)
 			}
 
 			for provider, version := range workspace.Providers { // go over every provider in user's folder
@@ -58,7 +58,7 @@ var whatsNewCmd = &cobra.Command{
 					os.Exit(1)
 				}
 
-				flags := cli_utils.ChangedComponentsFlags(*cmd) // get resources filtering
+				flags := cli.ChangedComponentsFlags(*cmd) // get resources filtering
 				for resourcesType, resources := range ruleSets {
 					if utils.IsItemInSlice(resourcesType, flags) {
 						for resourceName := range resources.(map[string]interface{}) { // go over all ruleSets

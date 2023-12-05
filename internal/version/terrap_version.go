@@ -13,9 +13,9 @@ type TerrapVersion struct {
 
 var Version = "filled on build"
 
-func (t *TerrapVersion) SetVersion() {
-	(*t).Product = "Terrap"
-	(*t).Version = Version
-	(*t).GoVersion = runtime.Version()
-	(*t).System = runtime.GOOS
+func (tv *TerrapVersion) SetVersion() {
+	(*tv).Product = "Terrap"
+	(*tv).Version = Version
+	(*tv).GoVersion = runtime.Version()
+	(*tv).System = runtime.GOOS
 }

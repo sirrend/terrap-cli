@@ -1,10 +1,16 @@
-package terraform_utils
+package terraform
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+
 	"github.com/enescakir/emoji"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hc-install/product"
@@ -14,11 +20,6 @@ import (
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/utils"
 	"github.com/sirrend/terrap-cli/internal/workspace"
-	"log"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
 )
 
 type terraformVersion struct {

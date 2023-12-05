@@ -5,15 +5,16 @@ Copyright © 2023 Sirrend
 package cmd
 
 import (
-	"github.com/enescakir/emoji"
-	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/sirrend/terrap-cli/internal/state"
-	"github.com/sirrend/terrap-cli/internal/terraform_utils"
-	"github.com/sirrend/terrap-cli/internal/utils"
-	"github.com/sirrend/terrap-cli/internal/workspace"
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/enescakir/emoji"
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/state"
+	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/utils/terraform"
+	"github.com/sirrend/terrap-cli/internal/workspace"
 
 	"github.com/spf13/cobra"
 )
@@ -35,7 +36,7 @@ func deleteInitData(dir string) {
 		}
 
 		if ws.IsTempProvider {
-			err = terraform_utils.RemoveTempTerraformExecutor(ws.ExecPath)
+			err = terraform.RemoveTempTerraformExecutor(ws.ExecPath)
 			if err != nil {
 				_, _ = commons.RED.Println(err)
 				os.Exit(1)

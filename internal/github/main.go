@@ -1,9 +1,10 @@
-package github_issue
+package github
 
 import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/google/go-github/github"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/spf13/cast"

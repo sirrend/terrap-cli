@@ -12,7 +12,6 @@ import (
 	"github.com/enescakir/emoji"
 	"github.com/fatih/color"
 	"github.com/sirrend/terrap-cli/internal/annotate"
-	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/files_handler"
 	"github.com/sirrend/terrap-cli/internal/parser"
@@ -20,6 +19,7 @@ import (
 	"github.com/sirrend/terrap-cli/internal/scanning"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/utils/cli"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
 )
@@ -60,7 +60,7 @@ var scanCmd = &cobra.Command{
 					_, _ = commons.RED.Println(err)
 				}
 			} else {
-				workspace = cli_utils.GetFixedProvidersFlag(*cmd)
+				workspace = cli.GetFixedProvidersFlag(*cmd)
 			}
 
 			// go over every provider in user's folder / user's declaration
@@ -78,14 +78,14 @@ var scanCmd = &cobra.Command{
 						continue
 					}
 
-					flags := cli_utils.ChangedComponentsFlags(*cmd)
+					flags := cli.ChangedComponentsFlags(*cmd)
 					if !cmd.Flag("annotate").Changed {
 						for file, fileResources := range files {
 							if len(fileResources) == 0 {
 								continue
 							}
 
-							for _, resource := range scanning.GetUniqResources(fileResources) {
+							for _, resource := range scanning.GetUniqueResources(fileResources) {
 								if utils.IsItemInSlice(resource.Type, flags) {
 									ruleset, err := resource.GetRuleset(rulebook, nil)
 									if err != nil {

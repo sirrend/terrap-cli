@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/enescakir/emoji"
-	"github.com/sirrend/terrap-cli/internal/cli_utils"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/receiver"
 	"github.com/sirrend/terrap-cli/internal/state"
 	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/utils/cli"
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
 )
@@ -24,7 +24,7 @@ var getContextCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var workspace workspace.Workspace
 		var tableData [][]string
-		table := cli_utils.GetTable([]string{"Provider", "Version"}) // initialize new table
+		table := cli.GetTable([]string{"Provider", "Version"}) // initialize new table
 
 		if utils.IsInitialized(".") {
 			err := state.Load("./.terrap.json", &workspace)
@@ -71,7 +71,7 @@ var getSupportedProvidersCmd = &cobra.Command{
 			tableData   [][]string
 			dataPrinted = false
 		)
-		table := cli_utils.GetTable([]string{"Provider", "Min Version", "Max Version"}) // initialize new table
+		table := cli.GetTable([]string{"Provider", "Min Version", "Max Version"}) // initialize new table
 		providers, _ := receiver.GetSupportedProviders()
 
 		// go over providers retrieved from API

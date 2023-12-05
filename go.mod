@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/Jeffail/gabs v1.4.0
-	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
 	github.com/enescakir/emoji v1.0.0
 	github.com/fatih/color v1.15.0
