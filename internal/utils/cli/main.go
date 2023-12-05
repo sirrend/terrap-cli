@@ -1,7 +1,10 @@
-package cli_utils
+package cli
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/common-nighthawk/go-figure"
 	"github.com/enescakir/emoji"
 	"github.com/hashicorp/go-version"
@@ -10,8 +13,6 @@ import (
 	"github.com/sirrend/terrap-cli/internal/workspace"
 	"github.com/spf13/cobra"
 	validate "golang.org/x/mod/semver"
-	"os"
-	"strings"
 )
 
 // SirrendLogoPrint

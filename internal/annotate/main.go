@@ -3,9 +3,10 @@ package annotate
 import (
 	"bufio"
 	"fmt"
-	"github.com/sirrend/terrap-cli/internal/files_handler"
-	"github.com/sirrend/terrap-cli/internal/rules_api"
 	"os"
+
+	"github.com/sirrend/terrap-cli/internal/files_handler"
+	"github.com/sirrend/terrap-cli/internal/parser"
 )
 
 func AddLineInPosition(resource files_handler.Resource, newLine string, pos int) {
@@ -51,7 +52,7 @@ func AddLineInPosition(resource files_handler.Resource, newLine string, pos int)
 	writer.Flush()
 }
 
-func AddAnnotationByRuleSet(resource files_handler.Resource, ruleSet rules_api.RuleSet) {
+func AddAnnotationByRuleSet(resource files_handler.Resource, ruleSet parser.RuleSet) {
 	for _, rule := range ruleSet.Rules {
 		pos := FindAttributeInResourceDeclaration(resource, rule.Path)
 

@@ -6,18 +6,19 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/enescakir/emoji"
-	"github.com/fatih/color"
-	"github.com/sirrend/terrap-cli/internal/cli_utils"
-	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/sirrend/terrap-cli/internal/files_handler"
-	"github.com/sirrend/terrap-cli/internal/rules_api"
-	"github.com/sirrend/terrap-cli/internal/state"
-	"github.com/sirrend/terrap-cli/internal/utils"
-	"github.com/sirrend/terrap-cli/internal/workspace"
-	"github.com/spf13/cobra"
 	"os"
 	"strings"
+
+	"github.com/enescakir/emoji"
+	"github.com/fatih/color"
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/files_handler"
+	"github.com/sirrend/terrap-cli/internal/receiver"
+	"github.com/sirrend/terrap-cli/internal/state"
+	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/utils/cli"
+	"github.com/sirrend/terrap-cli/internal/workspace"
+	"github.com/spf13/cobra"
 )
 
 // whatsNewCmd represents the whatsNew command
@@ -36,11 +37,11 @@ var whatsNewCmd = &cobra.Command{
 					_, _ = commons.RED.Println(err)
 				}
 			} else {
-				workspace = cli_utils.GetFixedProvidersFlag(*cmd)
+				workspace = cli.GetFixedProvidersFlag(*cmd)
 			}
 
 			for provider, version := range workspace.Providers { // go over every provider in user's folder
-				rulebook, err := rules_api.GetRules(provider, version.String())
+				rulebook, err := receiver.GetRules(provider, version.String())
 				// validate rulebook downloaded
 				if err != nil {
 					if strings.Contains(err.Error(), utils.StripProviderPrefix(provider)) {
@@ -57,10 +58,10 @@ var whatsNewCmd = &cobra.Command{
 					os.Exit(1)
 				}
 
-				flags := cli_utils.ChangedComponentsFlags(*cmd) // get resources filtering
+				flags := cli.ChangedComponentsFlags(*cmd) // get resources filtering
 				for resourcesType, resources := range ruleSets {
 					if utils.IsItemInSlice(resourcesType, flags) {
-						for resourceName, _ := range resources.(map[string]interface{}) { // go over all ruleSets
+						for resourceName := range resources.(map[string]interface{}) { // go over all ruleSets
 							resource := files_handler.Resource{Name: resourceName, Type: resourcesType}
 							ruleset, err := resource.GetRuleset(rulebook, nil)
 							if err != nil {

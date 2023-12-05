@@ -7,7 +7,6 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/sirrend/terrap-cli/internal/utils"
@@ -15,7 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version description of terrap",
@@ -25,17 +23,18 @@ var versionCmd = &cobra.Command{
 
 		if cmd.Flag("json").Changed {
 			j, _ := utils.Marshal(t)
-
-			_, err := io.Copy(os.Stdout, j)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else if cmd.Flag("tool-only").Changed {
-			fmt.Println(t.Version)
-
-		} else {
-			fmt.Println("Version:", t.Product+"-"+t.Version, t.System+"-"+t.GoVersion)
+			_, _ = io.Copy(os.Stdout, j) // Error handling can be modified as per your requirements
+			return
 		}
+
+		if cmd.Flag("tool-only").Changed {
+			fmt.Println(t.Version)
+			return
+		}
+
+		fmt.Printf("Version: %s-%s %s-%s",
+			t.Product, t.Version,
+			t.System, t.GoVersion)
 	},
 }
 

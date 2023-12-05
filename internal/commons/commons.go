@@ -2,7 +2,6 @@ package commons
 
 import (
 	"github.com/fatih/color"
-	"os"
 )
 
 var (
@@ -17,8 +16,3 @@ var (
 	SIRREND     = color.New(color.FgHiMagenta)
 	HighMagenta = color.New(color.FgMagenta)
 )
-
-func getUserHomeDir() string {
-	u, _ := os.UserHomeDir()
-	return u
-}

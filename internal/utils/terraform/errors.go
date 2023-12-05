@@ -1,11 +1,12 @@
-package terraform_utils
+package terraform
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/enescakir/emoji"
 	"github.com/sirrend/terrap-cli/internal/commons"
 	"github.com/sirrend/terrap-cli/internal/utils"
-	"strings"
 )
 
 type TerraformError struct {

@@ -1,15 +1,17 @@
 package files_handler
 
 import (
+	"fmt"
+	"os"
+	"path"
+	"path/filepath"
+	"strings"
+
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclparse"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 	"github.com/sirrend/terrap-cli/internal/utils"
-	"os"
-	"path"
-	"path/filepath"
-	"strings"
 )
 
 // convertFileToHCLObject
@@ -80,7 +82,10 @@ func analyzeResources(resources map[string]*tfconfig.Resource) ([]Resource, erro
 
 		for _, block := range blocks {
 			if block.Type() == "data" || block.Type() == "resource" {
-				if strings.Contains(resourceData.Type+"."+resourceData.Name, block.Labels()[0]+"."+block.Labels()[1]) {
+
+				if strings.Contains(
+					fmt.Sprintf("%s.%s", resourceData.Type, resourceData.Name),
+					fmt.Sprintf("%s.%s", block.Labels()[0], block.Labels()[1])) {
 					r.Init(block, resourceData)
 					break // stop searching after allocating the right block
 				}
@@ -134,9 +139,5 @@ func getLocalModuleResources(dir string, module tfconfig.ModuleCall) ([]Resource
 	bool - true if tf, otherwise false
 */
 func isTerraformFile(path string) bool {
-	if filepath.Ext(path) == ".tf" {
-		return true
-	}
-
-	return false
+	return filepath.Ext(path) == ".tf"
 }

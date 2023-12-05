@@ -1,8 +1,10 @@
 {
-	"Location": "/Users/yuvalpress/Desktop/Sirrend/terrap-cli/test-env/terraform-test",
+	"Location": "/Users/yuvalpress/Desktop/Sirrend/01_Repositories/terrap-cli/test-env/terraform-test",
 	"ExecPath": "/opt/homebrew/bin/terraform",
-	"TerraformVersion": "1.4.3-dev",
+	"TerraformVersion": "1.5.2",
 	"Providers": {
-		"registry.terraform.io/hashicorp/aws": "3.74.3"
+		"registry.terraform.io/hashicorp/aws": "3.74.3",
+		"registry.terraform.io/hashicorp/local": "2.1.0",
+		"registry.terraform.io/hashicorp/random": "3.6.0"
 	}
 }

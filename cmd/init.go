@@ -7,15 +7,16 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/enescakir/emoji"
-	"github.com/sirrend/terrap-cli/internal/commons"
-	"github.com/sirrend/terrap-cli/internal/state"
-	"github.com/sirrend/terrap-cli/internal/terraform_utils"
-	"github.com/sirrend/terrap-cli/internal/utils"
-	"github.com/spf13/cobra"
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/enescakir/emoji"
+	"github.com/sirrend/terrap-cli/internal/commons"
+	"github.com/sirrend/terrap-cli/internal/state"
+	"github.com/sirrend/terrap-cli/internal/utils"
+	"github.com/sirrend/terrap-cli/internal/utils/terraform"
+	"github.com/spf13/cobra"
 )
 
 // terraformInit
@@ -31,17 +32,17 @@ func terraformInit(dir string) {
 	if err != nil {
 		_, _ = commons.YELLOW.Println(emoji.Rocket, "Initializing directory...")
 		mainWorkspace.ExecPath, mainWorkspace.IsTempProvider,
-			mainWorkspace.TerraformVersion, err = terraform_utils.TerraformInit(dir) // initiate new terraform tool in context
+			mainWorkspace.TerraformVersion, err = terraform.TerraformInit(dir) // initiate new terraform tool in context
 
 		if err != nil {
 			fmt.Println()
-			terraform_utils.TerraformErrorPrettyPrint(err)
+			terraform.TerraformErrorPrettyPrint(err)
 			os.Exit(1)
 
 		}
 
 		_, _ = commons.YELLOW.Print(emoji.Toolbox, " Looking for providers...")
-		terraform_utils.FindTfProviders(dir, &mainWorkspace) //find all providers and assign to mainWorkspace
+		terraform.FindTfProviders(dir, &mainWorkspace) //find all providers and assign to mainWorkspace
 		_, _ = commons.GREEN.Println(" Done!")
 
 		_, _ = commons.YELLOW.Print(emoji.WavingHand, " Saving workspace...")

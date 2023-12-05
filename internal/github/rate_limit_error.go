@@ -1,4 +1,4 @@
-package github_issue
+package github
 
 import "fmt"
 
@@ -16,7 +16,7 @@ type RateError struct {
 	error - the new error
 */
 func createRateError() *RateError {
-	message := "Rate limit exceeded, please try again in an hour or open an issue manually here: https://placeholder.com"
+	message := "rate limit exceeded, please try again in an hour or open an issue manually here: https://placeholder.com"
 	return &RateError{message: message, error: fmt.Errorf(message)}
 }
 

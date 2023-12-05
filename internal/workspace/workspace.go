@@ -13,7 +13,7 @@ type Workspace struct {
 
 func (ws Workspace) GetProviderNames() []string {
 	var keys []string
-	for key, _ := range ws.Providers {
+	for key := range ws.Providers {
 		keys = append(keys, key)
 	}
 

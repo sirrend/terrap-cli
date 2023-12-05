@@ -1,10 +1,11 @@
-package rules_api
+package parser
 
 import (
 	"encoding/json"
+	"os"
+
 	"github.com/Jeffail/gabs"
 	"github.com/sirrend/terrap-cli/internal/utils"
-	"os"
 )
 
 // Rulebook is holding the rulebook as bytes alongside relevant metadata
